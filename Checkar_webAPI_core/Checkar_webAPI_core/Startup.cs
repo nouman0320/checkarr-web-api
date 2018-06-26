@@ -24,6 +24,17 @@ namespace Checkar_webAPI_core
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAnyOrigin",
+                    builder => builder
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+
+                   );
+
+            }); // So that cross orgin domains can access this API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -33,7 +44,7 @@ namespace Checkar_webAPI_core
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseCors("AllowAnyOrigin");
             app.UseMvc();
         }
     }
