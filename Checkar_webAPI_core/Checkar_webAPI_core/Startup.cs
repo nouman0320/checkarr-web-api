@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
+
 namespace Checkar_webAPI_core
 {
     public class Startup
@@ -35,6 +36,8 @@ namespace Checkar_webAPI_core
                    );
 
             }); // So that cross orgin domains can access this API
+
+           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
