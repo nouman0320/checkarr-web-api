@@ -33,45 +33,42 @@ namespace Checkar_webAPI_core.Controllers
         [HttpPost]
         public Boolean Post([FromBody]Classes.User user)
         {
-            Boolean check_var = false;
+            Boolean LoginCheck = false;
             try
             {
                 if (user != null)
                 {
-                    /*
-                    checkarrEntities1 ch = new checkarrEntities1();
-                    user_log u1 = ch.user_log.First(i => i.email == user.Email);
-                    */
-
-                    //=== DELETE FOLLOWING !!!!
-                    var u1 = new { password = "" };
-                    // JUST SO CAN IF WORK!!!
-                    //==================== DELETE ABOVE LINE!!!
-
                     
-                    if (user.Password == u1.password)
+                    // Initializing New DBContext
+                    checkarr.checkarrContext loginDBContext = new checkarr.checkarrContext();
+                    checkarr.UserLog UserLogin = loginDBContext.UserLog.FirstOrDefault(i => i.Email == user.Email);
+                    
+                    
+                    if (user.Password == UserLogin.Password)
                     {
+                        // To be executed whe login is successful
 
-
+                        /*
                         System.Diagnostics.Debug.Print("===========================\n");
                         System.Diagnostics.Debug.Print("Login POST successful");
                         System.Diagnostics.Debug.Print("===========================\n");
                         System.Diagnostics.Debug.Print("Password: " + user.Password + "\n");
                         System.Diagnostics.Debug.Print("Email: " + user.Email + "\n");
                         System.Diagnostics.Debug.Print("===========================\n");
+                        */
 
-                        check_var = true;
+                        LoginCheck = true;
                     }
                     else
                     {
-                        check_var = false;
-                        System.Diagnostics.Debug.Print("USER does not exists with the following credentials, please signup!\n");
+                        // To be executed the login fails
+                        LoginCheck = false;
                     }
                 }
                 else
                 {
 
-                    check_var = false;
+                    LoginCheck = false;
                 }
             }
             catch (Exception e)
@@ -79,8 +76,9 @@ namespace Checkar_webAPI_core.Controllers
                 System.Diagnostics.Debug.Print(e.ToString());
             }
 
-            return check_var;
+            return LoginCheck;
         }
+
         /*
         // PUT api/values/5
         [HttpPut("{id}")]

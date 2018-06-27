@@ -36,24 +36,31 @@ namespace Checkar_webAPI_core.Controllers
         {
             if (user.Email != null && user.Password != null)
             {
-                /*
-                checkarrEntities1 ch = new checkarrEntities1();
-                user_log u1 = ch.user_log.First(i => i.email == user.Email);
                 
-                if (u1.email != null)
+                checkarr.checkarrContext registerDBContext = new checkarr.checkarrContext();
+                checkarr.UserLog UserRegister = registerDBContext.UserLog.FirstOrDefault(i => i.Email == user.Email);
+                
+                if (UserRegister != null)
                 {
-                    System.Diagnostics.Debug.Print("User already exists with this email!\n");
+                    // To be executed when user exists in the DB
+                    System.Diagnostics.Debug.Print("> User Exists");
                     return false;
                 }
                 else
                 {
-                    u1.full_name = user.Fullname;
-                    u1.email = user.Email;
-                    u1.password = user.Password;
-                    u1.gender = user.Gender;
-                    ch.user_log.Add(u1);
-                    ch.SaveChanges();
+                    // To be executed when user doesn't exist in the DB
+                    UserRegister = new checkarr.UserLog();
 
+                    UserRegister.FullName = user.Fullname;
+                    UserRegister.Email = user.Email;
+                    UserRegister.Password = user.Password;
+                    UserRegister.Gender = user.Gender;
+
+                    //Adding user to the register context and saving that context
+                    registerDBContext.UserLog.Add(UserRegister);
+                    registerDBContext.SaveChanges();
+
+                    /*
                     System.Diagnostics.Debug.Print("===========================\n");
                     System.Diagnostics.Debug.Print("Register POST\n");
                     System.Diagnostics.Debug.Print("===========================\n");
@@ -62,10 +69,11 @@ namespace Checkar_webAPI_core.Controllers
                     System.Diagnostics.Debug.Print("Password: " + user.Password + "\n");
                     System.Diagnostics.Debug.Print("Gender: " + user.Gender + "\n");
                     System.Diagnostics.Debug.Print("===========================\n");
+                    */
                     return true;
                 }
-                */
-                return false;
+                
+               // return false;
             }
             else
             {
