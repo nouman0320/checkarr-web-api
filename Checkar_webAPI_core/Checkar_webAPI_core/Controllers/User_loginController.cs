@@ -55,7 +55,7 @@ namespace Checkar_webAPI_core.Controllers
                         {
                             OK = 3,
                             Issued = false,
-                            Token = "Not issued",
+                            Token = "",
                             Type = "None",
                             Generation = "NA",
                             Expiration = "NA",

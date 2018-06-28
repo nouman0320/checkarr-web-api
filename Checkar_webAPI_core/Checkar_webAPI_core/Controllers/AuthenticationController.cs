@@ -31,12 +31,29 @@ namespace Checkar_webAPI_core.Controllers
         */
         // POST: api/Authentication
         [HttpPost]
-        public void Post([FromBody]JObject value)
+        public JObject Post([FromBody]JObject value)
         {
+            Boolean validationCheck = false;
 
-            
-           
-            System.Diagnostics.Debug.WriteLine(value["AccessToken"]);
+            try
+            {
+                //String temp = "noumanarshad0320@gmail.com";
+                //System.Diagnostics.Debug.WriteLine(value["AccessToken"]);
+                Classes.Token token = new Classes.Token();
+                validationCheck = token.ValidateToken(value["AccessToken"].ToString(), value["Email"].ToString());
+                //System.Diagnostics.Debug.WriteLine("VALIDATION CHECK => "+ validationCheck);
+
+                
+            }
+            catch(Exception e)
+            {
+
+            }
+
+            JObject returnObject = new JObject();
+            returnObject.Add("AccessValidation", validationCheck);
+            return returnObject;
+
         }
         /*
         // PUT: api/Authentication/5
