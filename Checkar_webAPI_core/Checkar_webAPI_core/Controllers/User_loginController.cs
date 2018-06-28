@@ -48,28 +48,26 @@ namespace Checkar_webAPI_core.Controllers
                     checkarr.checkarrContext loginDBContext = new checkarr.checkarrContext();
                     checkarr.UserLog UserLogin = loginDBContext.UserLog.FirstOrDefault(i => i.Email == user.Email);
                     
-                    
-                    if (user.Password == UserLogin.Password)
+                    if(UserLogin == null)
+                    {
+                        System.Diagnostics.Debug.Print("** USER NOT FOUND");
+                        return Ok(new
+                        {
+                            OK = 3,
+                            Issued = false,
+                            Token = "Not issued",
+                            Type = "None",
+                            Generation = "NA",
+                            Expiration = "NA",
+                            Issuer = "http://www.checkarr.com"
+                        });
+                    }
+                    else if (user.Password == UserLogin.Password)
                     {
                         // To be executed whe login is successful
 
-                        var claims = new[]
-                        {
-                            new Claim(JwtRegisteredClaimNames.Sub, UserLogin.Email),
-                            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-                        };
-
-                        string privateSecretKey = "OfED+KgbZxtu4e4+JSQWdtSgTnuNixKy1nMVAEww8QL3IN3idcNgbNDSSaV4491Fo3sq2aGSCtYvekzs7JwXJnNAyvDSJjfK/7M8MpxSMnm1vMscBXyiYFXhGC4wqWlYBE828/5DNyw3QZW5EjD7hvDrY5OlYd4smCTa53helNnJz5NT9HQaDbE2sMwIDAQABAoIBAEs63TvT94njrPDP3A/sfCEXg1F2y0D/PjzUhM1aJGcRiOUXnGlYdViGhLnnJoNZTZm9qI1LT0NWcDA5NmBN6gcrk2EApyTt1D1i4AQ66rYoTF9iEC4Wye28v245BYESA6IIelgIxXGsVyllERsbTkaphzibbYfHmvwMxkn135Zfzd/NOXl/O32vYIomzrNEP+tN2WXhhG8c8+iZ8PErBV3CqrYogYy97d2CeQbXcpd5unPiU4TK0nnzeBAXdgeYuJHFC45YHl9UvShRoe6CHR47ceIGp6WMc5BTyyTkZpctuYJTwaChdj/QuRSkTYmn6jFL+MRfYQJ8VVwSVo5DbkECgYEA4/YIMKcwObYcSuHzgkMwH645CRDoy9M98eptAoNLdJBHYz23U5IbGL1+qHDDCPXxKs9ZG7EEqyWezq42eoFoebLA5O6/xrYXoaeIb094dbCF4D932hAkgAaAZkZVsSiWDCjYSV+JoWX4NVBcIL9yyHRhaaPVULTRbPsZQWq9+hMCgYEA48j4RGO7CaVpgUVobYasJnkGSdhkSCd1VwgvHH3vtuk7/JGUBRaZc0WZGcXkAJXnLh7QnDHOzWASdaxVgnuviaDi4CIkmTCfRqPesgDR2Iu35iQsH7P2/o1pzhpXQS/Ct6J7/GwJTqcXCvp4tfZDbFxS8oewzp4RstILj+pDyWECgYByQAbOy5xB8GGxrhjrOl1OI3V2c8EZFqA/NKy5y6/vlbgRpwbQnbNy7NYj+Y/mV80tFYqldEzQsiQrlei78Uu5YruGgZogL3ccj+izUPMgmP4f6+9XnSuN9rQ3jhy4k4zQP1BXRcim2YJSxhnGV+1hReLknTX2IwmrQxXfUW4xfQKBgAHZW8qSVK5bXWPjQFnDQhp92QM4cnfzegxe0KMWkp+VfRsrw1vXNx";
-                        var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(privateSecretKey));
-
-                    
-                    var token = new JwtSecurityToken(
-                                issuer: "http://www.checkarr.com",
-                                audience: "http://www.checkarr.com",
-                                expires: DateTime.UtcNow.AddMinutes(5),
-                                claims: claims,
-                                signingCredentials: new Microsoft.IdentityModel.Tokens.SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256)
-                            );
+                        Classes.Token CurrentToken = new Classes.Token();
+                        CurrentToken.GenerateToken(UserLogin.Email);
 
                         /*
                         System.Diagnostics.Debug.Print("===========================\n");
@@ -82,17 +80,28 @@ namespace Checkar_webAPI_core.Controllers
 
                         return Ok(new
                         {
-                            Token = new JwtSecurityTokenHandler().WriteToken(token),
+                            Ok = 1,
+                            Issued = true,
+                            Token = new JwtSecurityTokenHandler().WriteToken(CurrentToken.token),
                             Type = "Bearer",
                             Generation = DateTime.UtcNow,
-                            Expiration = token.ValidTo,
-                            Issuer = token.Issuer
+                            Expiration = CurrentToken.token.ValidTo,
+                            Issuer = CurrentToken.token.Issuer
                         });
                     }
                     else
                     {
                         // To be executed the login fails
-                        return Unauthorized();
+                        return Ok(new
+                        {
+                            OK = 2,
+                            Issued = false,
+                            Token = "Not issued",
+                            Type = "None",
+                            Generation = "NA",
+                            Expiration = "NA",
+                            Issuer = "http://www.checkarr.com"
+                        });
                     }
                 }
                 else
