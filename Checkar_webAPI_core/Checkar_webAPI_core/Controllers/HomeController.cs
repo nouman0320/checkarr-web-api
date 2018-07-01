@@ -9,17 +9,43 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Checkar_webAPI_core.Controllers
 {
-    [Authorize]
+   // [Authorize]
     [Produces("application/json")]
-    [Route("api/Home")]
+    [Route("api/Home/[action]")]
     [EnableCors("AllowAnyOrigin")]
     public class HomeController : Controller
     {
         // GET: api/Home
-        [HttpGet]
+       /* [HttpGet]
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
+        }*/
+        [HttpGet]
+        [ActionName("Get01")]
+        
+        public string Get01()
+        {
+            return "GET 1";
+        }
+        
+    [HttpGet]
+    [ActionName("Get02")]
+    public string Get02()
+    {
+        return "Get 2";
+    }
+
+        [HttpPost]
+        [ActionName("post01")]
+        public void post01()
+        {
+        }
+        [HttpPost]
+        [ActionName("post02")]
+        public void post02()
+        {
+
         }
         /*
         // GET: api/Home/5
@@ -31,9 +57,7 @@ namespace Checkar_webAPI_core.Controllers
         
         // POST: api/Home
         [HttpPost]
-        public void Post([FromBody]string value)
-        {
-        }
+        
         
         // PUT: api/Home/5
         [HttpPut("{id}")]
