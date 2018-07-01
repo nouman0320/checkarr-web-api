@@ -83,8 +83,8 @@ CREATE TABLE `user_log` (
   `user_sex` varchar(45) NOT NULL,
   `user_reg` datetime NOT NULL,
   `user_password` varchar(45) NOT NULL,
-  `Activated` tinyint(4) DEFAULT NULL,
-  `Disabled` tinyint(4) DEFAULT NULL,
+  `Activated` char(1) DEFAULT NULL,
+  `Disabled` char(1) DEFAULT NULL,
   PRIMARY KEY (`iduser_log`),
   UNIQUE KEY `user_emaill_UNIQUE` (`user_emaill`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -108,4 +108,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-07-01 23:16:41
+-- Dump completed on 2018-07-02  0:51:12
