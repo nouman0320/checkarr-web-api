@@ -6,6 +6,7 @@ namespace Checkar_webAPI_core.checkarr
 {
     public partial class checkarrContext : DbContext
     {
+        public virtual DbSet<TokenGen> TokenGen { get; set; }
         public virtual DbSet<UserLog> UserLog { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -13,36 +14,81 @@ namespace Checkar_webAPI_core.checkarr
             if (!optionsBuilder.IsConfigured)
             {
                 //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseMySql("server=localhost;port=3306;user=root;password=12government$;database=checkarr");
+                //connection string for shahnawaz
+		optionsBuilder.UseMySql("server=localhost;port=3306;user=root;password=12government$;database=checkarr");
+
+		// connection string for nouman
+                //optionsBuilder.UseMySql("Server=localhost;User Id=root;Password=Password420;Database=checkarr");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<TokenGen>(entity =>
+            {
+                entity.HasKey(e => e.Idtoken);
+
+                entity.ToTable("token_gen");
+
+                entity.Property(e => e.Idtoken)
+                    .HasColumnName("idtoken")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.ExpiryTime)
+                    .HasColumnName("expiry_time")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.TokenString)
+                    .HasColumnName("token_string")
+                    .HasMaxLength(64);
+
+                entity.Property(e => e.TokenType)
+                    .IsRequired()
+                    .HasColumnName("token_type")
+                    .HasMaxLength(45);
+
+                entity.Property(e => e.UserId)
+                    .HasColumnName("user_id")
+                    .HasColumnType("int(11)");
+            });
+
             modelBuilder.Entity<UserLog>(entity =>
             {
-                entity.HasKey(e => e.Email);
+                entity.HasKey(e => e.IduserLog);
 
                 entity.ToTable("user_log");
 
-                entity.Property(e => e.Email)
-                    .HasColumnName("email")
-                    .HasMaxLength(100);
+                entity.HasIndex(e => e.UserEmaill)
+                    .HasName("user_emaill_UNIQUE")
+                    .IsUnique();
 
-                entity.Property(e => e.FullName)
+                entity.Property(e => e.IduserLog)
+                    .HasColumnName("iduser_log")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.UserEmaill)
                     .IsRequired()
-                    .HasColumnName("full_name")
+                    .HasColumnName("user_emaill")
                     .HasMaxLength(45);
 
-                entity.Property(e => e.Gender)
+                entity.Property(e => e.UserFullname)
                     .IsRequired()
-                    .HasColumnName("gender")
-                    .HasMaxLength(10);
-
-                entity.Property(e => e.Password)
-                    .IsRequired()
-                    .HasColumnName("password")
+                    .HasColumnName("user_fullname")
                     .HasMaxLength(45);
+
+                entity.Property(e => e.UserPassword)
+                    .IsRequired()
+                    .HasColumnName("user_password")
+                    .HasMaxLength(45);
+
+                entity.Property(e => e.UserSex)
+                    .IsRequired()
+                    .HasColumnName("user_sex")
+                    .HasMaxLength(45);
+
+                entity.Property(e => e.UserTimestamp)
+                    .HasColumnName("user_timestamp")
+                    .HasColumnType("timestamp");
             });
         }
     }

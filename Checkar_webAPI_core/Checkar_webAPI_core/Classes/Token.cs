@@ -79,6 +79,7 @@ namespace Checkar_webAPI_core.Classes
                 }
                 catch (Exception e)
                 {
+                    validationFailures.Add(e);
                     System.Diagnostics.Debug.WriteLine(e);
 
                 }

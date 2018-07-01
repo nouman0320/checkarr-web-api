@@ -47,7 +47,7 @@ namespace Checkar_webAPI_core.Controllers
             }
             catch(Exception e)
             {
-
+                System.Diagnostics.Debug.WriteLine("Exception in AuthenticationController" + e);
             }
 
             JObject returnObject = new JObject();

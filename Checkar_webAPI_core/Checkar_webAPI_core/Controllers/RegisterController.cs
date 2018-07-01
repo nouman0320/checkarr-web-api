@@ -30,6 +30,7 @@ namespace Checkar_webAPI_core.Controllers
             return "value";
         }
 
+        
         // POST: api/Register
         [HttpPost]
         public Boolean Post([FromBody]Classes.User user)
@@ -38,7 +39,7 @@ namespace Checkar_webAPI_core.Controllers
             {
                 
                 checkarr.checkarrContext registerDBContext = new checkarr.checkarrContext();
-                checkarr.UserLog UserRegister = registerDBContext.UserLog.FirstOrDefault(i => i.Email == user.Email);
+                checkarr.UserLog UserRegister = registerDBContext.UserLog.FirstOrDefault(i => i.UserEmaill == user.Email);
                 
                 if (UserRegister != null)
                 {
@@ -51,25 +52,25 @@ namespace Checkar_webAPI_core.Controllers
                     // To be executed when user doesn't exist in the DB
                     UserRegister = new checkarr.UserLog();
 
-                    UserRegister.FullName = user.Fullname;
-                    UserRegister.Email = user.Email;
-                    UserRegister.Password = user.Password;
-                    UserRegister.Gender = user.Gender;
+                    UserRegister.UserFullname = user.Fullname;
+                    UserRegister.UserEmaill = user.Email;
+                    UserRegister.UserPassword = user.Password;
+                    UserRegister.UserSex = user.Gender;
 
                     //Adding user to the register context and saving that context
                     registerDBContext.UserLog.Add(UserRegister);
                     registerDBContext.SaveChanges();
 
-                    /*
-                    System.Diagnostics.Debug.Print("===========================\n");
-                    System.Diagnostics.Debug.Print("Register POST\n");
-                    System.Diagnostics.Debug.Print("===========================\n");
-                    System.Diagnostics.Debug.Print("Fullname: " + user.Fullname + "\n");
-                    System.Diagnostics.Debug.Print("Email: " + user.Email + "\n");
-                    System.Diagnostics.Debug.Print("Password: " + user.Password + "\n");
-                    System.Diagnostics.Debug.Print("Gender: " + user.Gender + "\n");
-                    System.Diagnostics.Debug.Print("===========================\n");
-                    */
+                    
+                    //System.Diagnostics.Debug.Print("===========================\n");
+                    //System.Diagnostics.Debug.Print("Register POST\n");
+                    //System.Diagnostics.Debug.Print("===========================\n");
+                    //System.Diagnostics.Debug.Print("Fullname: " + user.Fullname + "\n");
+                    //System.Diagnostics.Debug.Print("Email: " + user.Email + "\n");
+                    //System.Diagnostics.Debug.Print("Password: " + user.Password + "\n");
+                    //System.Diagnostics.Debug.Print("Gender: " + user.Gender + "\n");
+                    //System.Diagnostics.Debug.Print("===========================\n");
+                    
                     return true;
                 }
                 
@@ -81,6 +82,8 @@ namespace Checkar_webAPI_core.Controllers
                 return false;
             }
         }
+
+        
 
         // PUT: api/Register/5
         [HttpPut("{id}")]

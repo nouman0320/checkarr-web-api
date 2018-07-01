@@ -34,10 +34,12 @@ namespace Checkar_webAPI_core.Controllers
         }
         */
 
+            
         // POST api/values
         [HttpPost]
         public IActionResult Post([FromBody]Classes.User user)
         {
+            
             
             try
             {
@@ -46,7 +48,7 @@ namespace Checkar_webAPI_core.Controllers
                     
                     // Initializing New DBContext
                     checkarr.checkarrContext loginDBContext = new checkarr.checkarrContext();
-                    checkarr.UserLog UserLogin = loginDBContext.UserLog.FirstOrDefault(i => i.Email == user.Email);
+                    checkarr.UserLog UserLogin = loginDBContext.UserLog.FirstOrDefault(i => i.UserEmaill == user.Email);
                     
                     if(UserLogin == null)
                     {
@@ -62,21 +64,21 @@ namespace Checkar_webAPI_core.Controllers
                             Issuer = "http://www.checkarr.com"
                         });
                     }
-                    else if (user.Password == UserLogin.Password)
+                    else if (user.Password == UserLogin.UserPassword)
                     {
                         // To be executed whe login is successful
 
                         Classes.Token CurrentToken = new Classes.Token();
-                        CurrentToken.GenerateToken(UserLogin.Email);
+                        CurrentToken.GenerateToken(UserLogin.UserEmaill);
 
-                        /*
-                        System.Diagnostics.Debug.Print("===========================\n");
-                        System.Diagnostics.Debug.Print("Login POST successful");
-                        System.Diagnostics.Debug.Print("===========================\n");
-                        System.Diagnostics.Debug.Print("Password: " + user.Password + "\n");
-                        System.Diagnostics.Debug.Print("Email: " + user.Email + "\n");
-                        System.Diagnostics.Debug.Print("===========================\n");
-                        */
+                        
+                        //System.Diagnostics.Debug.Print("===========================\n");
+                        //System.Diagnostics.Debug.Print("Login POST successful");
+                        //System.Diagnostics.Debug.Print("===========================\n");
+                        //System.Diagnostics.Debug.Print("Password: " + user.Password + "\n");
+                        //System.Diagnostics.Debug.Print("Email: " + user.Email + "\n");
+                        //System.Diagnostics.Debug.Print("===========================\n");
+                        
 
                         return Ok(new
                         {
