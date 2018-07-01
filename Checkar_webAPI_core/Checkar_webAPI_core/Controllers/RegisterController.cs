@@ -58,6 +58,8 @@ namespace Checkar_webAPI_core.Controllers
                     UserRegister.UserPassword = user.Password;
                     UserRegister.UserSex = user.Gender;
                     UserRegister.UserReg = DateTime.UtcNow;
+                    UserRegister.Activated = "F";
+                    UserRegister.Disabled = "F";
 
                     //Adding user to the register context and saving that context
                     registerDBContext.UserLog.Add(UserRegister);
@@ -66,7 +68,19 @@ namespace Checkar_webAPI_core.Controllers
 
                     Classes.CodeGenerator codeGenerator = new Classes.CodeGenerator();
                     String activationCode = codeGenerator.ActivationCodeGenerator();
-                    // HAVE To SAVE THIS IN THE DATABASE WITH EXPIRY DATE
+
+
+                    // saving in confirmation code table
+                    checkarr.Confirmationcode confirmationCodeModel = new checkarr.Confirmationcode();
+                    confirmationCodeModel.ConfirmationCode = activationCode;
+                    confirmationCodeModel.ConfirmationType = "ACTIVATION_CODE";
+                    confirmationCodeModel.GeneratedOn = DateTime.UtcNow;
+                    confirmationCodeModel.ExpiryTime = DateTime.UtcNow.AddDays(1);
+                    confirmationCodeModel.Used = "F";
+                    confirmationCodeModel.UserId = 0; // have to update user id
+
+                    registerDBContext.Confirmationcode.Add(confirmationCodeModel);
+                    registerDBContext.SaveChanges();
 
                     /*
                      * 
