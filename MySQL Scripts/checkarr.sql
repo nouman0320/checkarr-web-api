@@ -16,6 +16,34 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `confirmationcode`
+--
+
+DROP TABLE IF EXISTS `confirmationcode`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `confirmationcode` (
+  `confirmation_code` varchar(45) NOT NULL,
+  `confirmation_type` varchar(45) DEFAULT NULL,
+  `used` tinyint(4) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `GeneratedOn` datetime DEFAULT NULL,
+  `ExpiryTime` datetime DEFAULT NULL,
+  `c_id` int(11) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`c_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `confirmationcode`
+--
+
+LOCK TABLES `confirmationcode` WRITE;
+/*!40000 ALTER TABLE `confirmationcode` DISABLE KEYS */;
+/*!40000 ALTER TABLE `confirmationcode` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `token_gen`
 --
 
@@ -55,6 +83,8 @@ CREATE TABLE `user_log` (
   `user_sex` varchar(45) NOT NULL,
   `user_reg` datetime NOT NULL,
   `user_password` varchar(45) NOT NULL,
+  `Activated` tinyint(4) DEFAULT NULL,
+  `Disabled` tinyint(4) DEFAULT NULL,
   PRIMARY KEY (`iduser_log`),
   UNIQUE KEY `user_emaill_UNIQUE` (`user_emaill`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -78,4 +108,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-07-01  2:02:28
+-- Dump completed on 2018-07-01 23:16:41
