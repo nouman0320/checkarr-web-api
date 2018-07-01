@@ -54,7 +54,7 @@ namespace Checkar_webAPI_core.checkarr
 
                 entity.Property(e => e.Used)
                     .HasColumnName("used")
-                    .HasColumnType("tinyint(4)");
+                    .HasColumnType("char(1)");
 
                 entity.Property(e => e.UserId)
                     .HasColumnName("user_id")
@@ -103,9 +103,9 @@ namespace Checkar_webAPI_core.checkarr
                     .HasColumnName("iduser_log")
                     .HasColumnType("int(11)");
 
-                entity.Property(e => e.Activated).HasColumnType("tinyint(4)");
+                entity.Property(e => e.Activated).HasColumnType("char(1)");
 
-                entity.Property(e => e.Disabled).HasColumnType("tinyint(4)");
+                entity.Property(e => e.Disabled).HasColumnType("char(1)");
 
                 entity.Property(e => e.UserEmaill)
                     .IsRequired()

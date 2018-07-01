@@ -7,7 +7,7 @@ namespace Checkar_webAPI_core.checkarr
     {
         public string ConfirmationCode { get; set; }
         public string ConfirmationType { get; set; }
-        public sbyte? Used { get; set; }
+        public string Used { get; set; }
         public int? UserId { get; set; }
         public DateTime? GeneratedOn { get; set; }
         public DateTime? ExpiryTime { get; set; }
