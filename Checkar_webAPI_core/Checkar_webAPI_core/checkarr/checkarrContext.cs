@@ -6,6 +6,7 @@ namespace Checkar_webAPI_core.checkarr
 {
     public partial class checkarrContext : DbContext
     {
+        public virtual DbSet<Confirmationcode> Confirmationcode { get; set; }
         public virtual DbSet<TokenGen> TokenGen { get; set; }
         public virtual DbSet<UserLog> UserLog { get; set; }
 
@@ -15,7 +16,7 @@ namespace Checkar_webAPI_core.checkarr
             {
                 //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 //connection string for shahnawaz
-		        //optionsBuilder.UseMySql("server=localhost;port=3306;user=root;password=12government$;database=checkarr");
+                //optionsBuilder.UseMySql("server=localhost;port=3306;user=root;password=12government$;database=checkarr");
 
                 // connection string for nouman
                 optionsBuilder.UseMySql("Server=localhost;User Id=root;Password=Password420;Database=checkarr");
@@ -28,6 +29,38 @@ namespace Checkar_webAPI_core.checkarr
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Confirmationcode>(entity =>
+            {
+                entity.HasKey(e => e.CId);
+
+                entity.ToTable("confirmationcode");
+
+                entity.Property(e => e.CId)
+                    .HasColumnName("c_id")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.ConfirmationCode)
+                    .IsRequired()
+                    .HasColumnName("confirmation_code")
+                    .HasMaxLength(45);
+
+                entity.Property(e => e.ConfirmationType)
+                    .HasColumnName("confirmation_type")
+                    .HasMaxLength(45);
+
+                entity.Property(e => e.ExpiryTime).HasColumnType("datetime");
+
+                entity.Property(e => e.GeneratedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.Used)
+                    .HasColumnName("used")
+                    .HasColumnType("tinyint(4)");
+
+                entity.Property(e => e.UserId)
+                    .HasColumnName("user_id")
+                    .HasColumnType("int(11)");
+            });
+
             modelBuilder.Entity<TokenGen>(entity =>
             {
                 entity.HasKey(e => e.Idtoken);
@@ -69,6 +102,10 @@ namespace Checkar_webAPI_core.checkarr
                 entity.Property(e => e.IduserLog)
                     .HasColumnName("iduser_log")
                     .HasColumnType("int(11)");
+
+                entity.Property(e => e.Activated).HasColumnType("tinyint(4)");
+
+                entity.Property(e => e.Disabled).HasColumnType("tinyint(4)");
 
                 entity.Property(e => e.UserEmaill)
                     .IsRequired()
