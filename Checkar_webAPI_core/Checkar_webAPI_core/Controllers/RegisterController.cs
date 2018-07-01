@@ -56,6 +56,7 @@ namespace Checkar_webAPI_core.Controllers
                     UserRegister.UserEmaill = user.Email;
                     UserRegister.UserPassword = user.Password;
                     UserRegister.UserSex = user.Gender;
+                    UserRegister.UserReg = DateTime.UtcNow;
 
                     //Adding user to the register context and saving that context
                     registerDBContext.UserLog.Add(UserRegister);

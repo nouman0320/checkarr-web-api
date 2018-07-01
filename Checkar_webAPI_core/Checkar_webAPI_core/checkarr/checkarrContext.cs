@@ -77,14 +77,14 @@ namespace Checkar_webAPI_core.checkarr
                     .HasColumnName("user_password")
                     .HasMaxLength(45);
 
+                entity.Property(e => e.UserReg)
+                    .HasColumnName("user_reg")
+                    .HasColumnType("datetime");
+
                 entity.Property(e => e.UserSex)
                     .IsRequired()
                     .HasColumnName("user_sex")
                     .HasMaxLength(45);
-
-                entity.Property(e => e.UserTimestamp)
-                    .HasColumnName("user_timestamp")
-                    .HasColumnType("timestamp");
             });
         }
     }

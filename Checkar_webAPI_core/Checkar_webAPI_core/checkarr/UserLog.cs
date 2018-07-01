@@ -9,7 +9,7 @@ namespace Checkar_webAPI_core.checkarr
         public string UserFullname { get; set; }
         public string UserEmaill { get; set; }
         public string UserSex { get; set; }
-        public DateTimeOffset UserTimestamp { get; set; }
+        public DateTime UserReg { get; set; }
         public string UserPassword { get; set; }
     }
 }
