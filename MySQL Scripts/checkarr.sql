@@ -53,7 +53,7 @@ CREATE TABLE `user_log` (
   `user_fullname` varchar(45) NOT NULL,
   `user_emaill` varchar(45) NOT NULL,
   `user_sex` varchar(45) NOT NULL,
-  `user_timestamp` timestamp NOT NULL,
+  `user_reg` datetime NOT NULL,
   `user_password` varchar(45) NOT NULL,
   PRIMARY KEY (`iduser_log`),
   UNIQUE KEY `user_emaill_UNIQUE` (`user_emaill`)
@@ -78,4 +78,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-06-30 20:02:28
+-- Dump completed on 2018-07-01  2:02:28
