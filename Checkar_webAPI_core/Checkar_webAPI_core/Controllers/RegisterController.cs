@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Checkar_webAPI_core.Controllers
 {
@@ -61,6 +62,26 @@ namespace Checkar_webAPI_core.Controllers
                     //Adding user to the register context and saving that context
                     registerDBContext.UserLog.Add(UserRegister);
                     registerDBContext.SaveChanges();
+
+
+                    Classes.CodeGenerator codeGenerator = new Classes.CodeGenerator();
+                    String activationCode = codeGenerator.ActivationCodeGenerator();
+                    // HAVE To SAVE THIS IN THE DATABASE WITH EXPIRY DATE
+
+                    /*
+                     * 
+                     *  I NEED USER ID OF NEW REGISTERED USER!!
+                     *
+                     * */
+                    int newUserID = 0;
+
+                    Classes.Token tokenGenerator = new Classes.Token();
+                    JwtSecurityToken activationToken = tokenGenerator.GenerateActivationToken(newUserID);
+
+
+                    // sending activation mail
+                    Classes.Mailer currentMailer = new Classes.Mailer();
+                    currentMailer.sendActivationMail(user.Email, activationToken, activationCode);
 
                     
                     //System.Diagnostics.Debug.Print("===========================\n");
