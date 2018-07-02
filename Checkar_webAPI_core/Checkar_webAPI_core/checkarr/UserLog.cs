@@ -11,7 +11,7 @@ namespace Checkar_webAPI_core.checkarr
         public string UserSex { get; set; }
         public DateTime UserReg { get; set; }
         public string UserPassword { get; set; }
-        public sbyte? Activated { get; set; }
-        public sbyte? Disabled { get; set; }
+        public string Activated { get; set; }
+        public string Disabled { get; set; }
     }
 }

@@ -25,7 +25,7 @@ DROP TABLE IF EXISTS `confirmationcode`;
 CREATE TABLE `confirmationcode` (
   `confirmation_code` varchar(45) NOT NULL,
   `confirmation_type` varchar(45) DEFAULT NULL,
-  `used` tinyint(4) DEFAULT NULL,
+  `used` char(1) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
   `GeneratedOn` datetime DEFAULT NULL,
   `ExpiryTime` datetime DEFAULT NULL,
@@ -33,15 +33,6 @@ CREATE TABLE `confirmationcode` (
   PRIMARY KEY (`c_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `confirmationcode`
---
-
-LOCK TABLES `confirmationcode` WRITE;
-/*!40000 ALTER TABLE `confirmationcode` DISABLE KEYS */;
-/*!40000 ALTER TABLE `confirmationcode` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `token_gen`
@@ -59,15 +50,6 @@ CREATE TABLE `token_gen` (
   PRIMARY KEY (`idtoken`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `token_gen`
---
-
-LOCK TABLES `token_gen` WRITE;
-/*!40000 ALTER TABLE `token_gen` DISABLE KEYS */;
-/*!40000 ALTER TABLE `token_gen` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `user_log`
@@ -89,15 +71,6 @@ CREATE TABLE `user_log` (
   UNIQUE KEY `user_emaill_UNIQUE` (`user_emaill`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `user_log`
---
-
-LOCK TABLES `user_log` WRITE;
-/*!40000 ALTER TABLE `user_log` DISABLE KEYS */;
-/*!40000 ALTER TABLE `user_log` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -108,4 +81,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-07-02  0:51:12
+-- Dump completed on 2018-07-02  1:09:57
