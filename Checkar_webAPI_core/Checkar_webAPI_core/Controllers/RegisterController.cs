@@ -50,11 +50,12 @@ namespace Checkar_webAPI_core.Controllers
                 }
                 else
                 {
-                    
+                    string temp_email;
                     // To be executed when user doesn't exist in the DB
                     UserRegister = new checkarr.UserLog();
                     UserRegister.UserFullname = user.Fullname;
                     UserRegister.UserEmaill = user.Email;
+                    temp_email = user.Email;
                     UserRegister.UserPassword = user.Password;
                     UserRegister.UserSex = user.Gender;
                     UserRegister.UserReg = DateTime.UtcNow;
@@ -65,13 +66,17 @@ namespace Checkar_webAPI_core.Controllers
                     registerDBContext.UserLog.Add(UserRegister);
                     registerDBContext.SaveChanges();
 
-
+                    int newUserID;
                     // 
                     // Id of last user
                     UserRegister = registerDBContext.UserLog.Last();
-                    int newUserID = UserRegister.IduserLog;
-
-
+                    if(temp_email == UserRegister.UserEmaill)
+                        newUserID = UserRegister.IduserLog;
+                    else
+                    {
+                        UserRegister = registerDBContext.UserLog.FirstOrDefault(i => i.UserEmaill == temp_email);
+                        newUserID = UserRegister.IduserLog;
+                    }
                     Classes.CodeGenerator codeGenerator = new Classes.CodeGenerator();
                     String activationCode = codeGenerator.ActivationCodeGenerator();
 
