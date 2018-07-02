@@ -52,7 +52,6 @@ namespace Checkar_webAPI_core.Controllers
                 {
                     // To be executed when user doesn't exist in the DB
                     UserRegister = new checkarr.UserLog();
-
                     UserRegister.UserFullname = user.Fullname;
                     UserRegister.UserEmaill = user.Email;
                     UserRegister.UserPassword = user.Password;
@@ -63,9 +62,21 @@ namespace Checkar_webAPI_core.Controllers
                     registerDBContext.UserLog.Add(UserRegister);
                     registerDBContext.SaveChanges();
 
+                    // Id of last user
+                    UserRegister = registerDBContext.UserLog.Last();
+                    int newUserID = UserRegister.IduserLog;
+
 
                     Classes.CodeGenerator codeGenerator = new Classes.CodeGenerator();
                     String activationCode = codeGenerator.ActivationCodeGenerator();
+                    checkarr.Confirmationcode Acode = new checkarr.Confirmationcode();
+                    Acode.ConfirmationCode = activationCode;
+                    Acode.GeneratedOn = DateTime.UtcNow;
+                    Acode.UserId = newUserID;
+                    Acode.ConfirmationType = "text";
+                    registerDBContext.Confirmationcode.Add(Acode);
+                    registerDBContext.SaveChanges();
+
                     // HAVE To SAVE THIS IN THE DATABASE WITH EXPIRY DATE
 
                     /*
@@ -73,7 +84,6 @@ namespace Checkar_webAPI_core.Controllers
                      *  I NEED USER ID OF NEW REGISTERED USER!!
                      *
                      * */
-                    int newUserID = 0;
 
                     Classes.Token tokenGenerator = new Classes.Token();
                     JwtSecurityToken activationToken = tokenGenerator.GenerateActivationToken(newUserID);
