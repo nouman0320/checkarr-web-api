@@ -71,18 +71,6 @@ namespace Checkar_webAPI_core.Controllers
 
                     Classes.CodeGenerator codeGenerator = new Classes.CodeGenerator();
                     String activationCode = codeGenerator.ActivationCodeGenerator();
-//<<<<<<< HEAD
-                  //  checkarr.Confirmationcode Acode = new checkarr.Confirmationcode();
-                   // Acode.ConfirmationCode = activationCode;
-                    //Acode.GeneratedOn = DateTime.UtcNow;
-                    //Acode.UserId = newUserID;
-                    //Acode.ConfirmationType = "text";
-                    //registerDBContext.Confirmationcode.Add(Acode);
-                    //registerDBContext.SaveChanges();
-
-                    // HAVE To SAVE THIS IN THE DATABASE WITH EXPIRY DATE
-//=======
-
 
                     // saving in confirmation code table
                     checkarr.Confirmationcode confirmationCodeModel = new checkarr.Confirmationcode();
@@ -95,13 +83,7 @@ namespace Checkar_webAPI_core.Controllers
 
                     registerDBContext.Confirmationcode.Add(confirmationCodeModel);
                     registerDBContext.SaveChanges();
-//>>>>>>> d2bb01f3e62f915bded317d9b1cac9010234e2e6
 
-                    /*
-                     * 
-                     *  I NEED USER ID OF NEW REGISTERED USER!!
-                     *
-                     * */
 
                     Classes.Token tokenGenerator = new Classes.Token();
                     JwtSecurityToken activationToken = tokenGenerator.GenerateActivationToken(newUserID);
