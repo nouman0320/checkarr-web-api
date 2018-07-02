@@ -71,17 +71,17 @@ namespace Checkar_webAPI_core.Controllers
 
                     Classes.CodeGenerator codeGenerator = new Classes.CodeGenerator();
                     String activationCode = codeGenerator.ActivationCodeGenerator();
-<<<<<<< HEAD
-                    checkarr.Confirmationcode Acode = new checkarr.Confirmationcode();
-                    Acode.ConfirmationCode = activationCode;
-                    Acode.GeneratedOn = DateTime.UtcNow;
-                    Acode.UserId = newUserID;
-                    Acode.ConfirmationType = "text";
-                    registerDBContext.Confirmationcode.Add(Acode);
-                    registerDBContext.SaveChanges();
+//<<<<<<< HEAD
+                  //  checkarr.Confirmationcode Acode = new checkarr.Confirmationcode();
+                   // Acode.ConfirmationCode = activationCode;
+                    //Acode.GeneratedOn = DateTime.UtcNow;
+                    //Acode.UserId = newUserID;
+                    //Acode.ConfirmationType = "text";
+                    //registerDBContext.Confirmationcode.Add(Acode);
+                    //registerDBContext.SaveChanges();
 
                     // HAVE To SAVE THIS IN THE DATABASE WITH EXPIRY DATE
-=======
+//=======
 
 
                     // saving in confirmation code table
@@ -91,11 +91,11 @@ namespace Checkar_webAPI_core.Controllers
                     confirmationCodeModel.GeneratedOn = DateTime.UtcNow;
                     confirmationCodeModel.ExpiryTime = DateTime.UtcNow.AddDays(1);
                     confirmationCodeModel.Used = "F";
-                    confirmationCodeModel.UserId = 0; // have to update user id
+                    confirmationCodeModel.UserId = newUserID;// have to update user id
 
                     registerDBContext.Confirmationcode.Add(confirmationCodeModel);
                     registerDBContext.SaveChanges();
->>>>>>> d2bb01f3e62f915bded317d9b1cac9010234e2e6
+//>>>>>>> d2bb01f3e62f915bded317d9b1cac9010234e2e6
 
                     /*
                      * 
