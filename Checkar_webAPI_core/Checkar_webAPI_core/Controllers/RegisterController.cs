@@ -50,6 +50,7 @@ namespace Checkar_webAPI_core.Controllers
                 }
                 else
                 {
+                    
                     // To be executed when user doesn't exist in the DB
                     UserRegister = new checkarr.UserLog();
                     UserRegister.UserFullname = user.Fullname;
@@ -64,6 +65,8 @@ namespace Checkar_webAPI_core.Controllers
                     registerDBContext.UserLog.Add(UserRegister);
                     registerDBContext.SaveChanges();
 
+
+                    // 
                     // Id of last user
                     UserRegister = registerDBContext.UserLog.Last();
                     int newUserID = UserRegister.IduserLog;
