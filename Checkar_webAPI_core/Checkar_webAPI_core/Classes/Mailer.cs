@@ -10,7 +10,7 @@ namespace Checkar_webAPI_core.Classes
     {
 
 
-        public void sendRecoveryMail(String email_to, JwtSecurityToken recoveryToken, String recoveryCode)
+        public void sendRecoveryMail(String email_to, string recoveryToken, String recoveryCode)
         {
             // this mail function should be called when user is recovering its account
             System.Diagnostics.Debug.WriteLine("++++++++++++++++++++++++++++++++++++++++++++++++");
