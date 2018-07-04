@@ -165,9 +165,7 @@ namespace Checkar_webAPI_core.Controllers
                 {
                     // if condition true then perform this action in database updated user account activation status in table "true"
 
-                    checkarr.UserLog Userr = registerDBContext.UserLog.FirstOrDefault(i => i.IduserLog == RecCode.UserId);
-                    Userr.Activated = "T";
-                    registerDBContext.SaveChanges();
+                   
 
                     string activation_token_tempstr = value["ACTIVATION_TOKEN"].ToString();
                     Classes.Token object1 = new Classes.Token();
@@ -183,6 +181,9 @@ namespace Checkar_webAPI_core.Controllers
                         if (check_code_expirytime)
                         {
 
+                            checkarr.UserLog Userr = registerDBContext.UserLog.FirstOrDefault(i => i.IduserLog == RecCode.UserId);
+                            Userr.Activated = "T";
+                            registerDBContext.SaveChanges();
                             returnObject.Add("RETURN_CODE", 1);
                         }
                         else
