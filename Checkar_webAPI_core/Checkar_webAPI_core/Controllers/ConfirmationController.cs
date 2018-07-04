@@ -46,7 +46,7 @@ namespace Checkar_webAPI_core.Controllers
                 checkarr.UserLog Userr = registerDBContext.UserLog.FirstOrDefault(i => i.IduserLog == UserCode.UserId);
                 if (UserCode!=null && UserCode.UserId == usr_id && UserCode.ExpiryTime > DateTime.Now) // check here 
                 {
-                    if (new Classes.Token().ValidateRecoveryToken(rec_token, Userr.UserEmaill)) // pass second argument recovery eamil fetch from database
+                    if (new Classes.Token().ValidateRecoveryToken(rec_token, Userr.)) // pass second argument recovery eamil fetch from database
                 {
                         JwtSecurityToken objecttmp = new JwtSecurityToken();
                         objecttmp = new Classes.Token().GenerateResetToken(Userr.UserEmaill); // pass argument recovery email to that function
