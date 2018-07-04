@@ -14,20 +14,6 @@ namespace Checkar_webAPI_core.Controllers
     [EnableCors("AllowAnyOrigin")]
     public class ConfirmationController : Controller
     {
-        // GET: api/Confirmation
-        /* [HttpGet]
-         public IEnumerable<string> Get()
-         {
-             return new string[] { "value1", "value2" };
-         }
-
-         // GET: api/Confirmation/5
-         [HttpGet("{id}", Name = "Get")]
-         public string Get(int id)
-         {
-             return "value";
-         }
-         */
         // POST: api/Confirmation
         [HttpPost]
         [ActionName("Recovery_Confirmation")]
@@ -44,22 +30,47 @@ namespace Checkar_webAPI_core.Controllers
                 string rec_token = value["RECOVERY_TOKEN"].ToString();
                 checkarr.Confirmationcode UserCode = registerDBContext.Confirmationcode.FirstOrDefault(i => i.ConfirmationCode == str_code);
                 checkarr.UserLog Userr = registerDBContext.UserLog.FirstOrDefault(i => i.IduserLog == UserCode.UserId);
-                if (UserCode!=null && UserCode.UserId == usr_id && UserCode.ExpiryTime > DateTime.Now) // check here 
+                if (UserCode!=null && UserCode.UserId == usr_id && UserCode.ExpiryTime >= DateTime.UtcNow) // check here 
                 {
                     if (new Classes.Token().ValidateRecoveryToken(rec_token, Userr.UserEmaill)) // pass second argument recovery eamil fetch from database
-                {
-                        JwtSecurityToken objecttmp = new JwtSecurityToken();
-                        objecttmp = new Classes.Token().GenerateResetToken(Userr.UserEmaill); // pass argument recovery email to that function
+                    {
+                        JwtSecurityToken resetToken = new JwtSecurityToken();
+                        resetToken = new Classes.Token().GenerateResetToken(Userr.UserEmaill); // pass argument recovery email to that function
+
+                        String resetTokenString = new JwtSecurityTokenHandler().WriteToken(resetToken);
+                        // recovery is success
+
+                        returnObject.Add("RETURN_CODE", 1);
+                        returnObject.Add("RESET_TOKEN", resetTokenString);
+
+                    }
+                    else
+                    {
+                        returnObject.Add("RETURN_CODE", 3);
+                        returnObject.Add("RESET_TOKEN", null);
+                    }
 
                 }
-
+                else
+                {
+                    returnObject.Add("RETURN_CODE", 2);
+                    returnObject.Add("RESET_TOKEN", null);
                 }
             }
             catch(Exception ex)
             {
-                returnObject.Add("RETURN_CODE", 3, "REST_TOKEN", null);
+                System.Diagnostics.Debug.WriteLine("EXCEPTION IN RECOVERY CONFIRMATION = "+ex);
+                returnObject.Add("RETURN_CODE", 4);
+                returnObject.Add("RESET_TOKEN", null); 
             }
-            
+
+
+            /*
+             * . RETURN_CODE: 1 = RECOVERY CODE IS CONFIRMED
+                . RETURN_CODE: 2 = RECOVERY CODE IS INVALID
+                . RETURN_CODE: 3 = RECOVERY TOKEN IS INVALID
+                . RETURN_CODE: 4 = EXCEPTION
+             * */
             return returnObject;
         }
 
@@ -67,20 +78,22 @@ namespace Checkar_webAPI_core.Controllers
         [HttpPost]
         public JObject Account_recovery([FromBody]JObject value)
         {
-            string recovery_email_temp = "";
-            checkarr.checkarrContext registerDBContext = new checkarr.checkarrContext();
-            checkarr.UserLog Userr = registerDBContext.UserLog.FirstOrDefault(i => i.UserEmaill == value["RECOVERY_EMAIL"].ToString());
-            // query through database and store email in recovery_email_temp
             JObject returnObject = new JObject();
-
             try
             {
-                if (value["RECOVERY_EMAIL"].ToString() == recovery_email_temp)
+                
+                checkarr.checkarrContext registerDBContext = new checkarr.checkarrContext();
+                checkarr.UserLog Userr = registerDBContext.UserLog.FirstOrDefault(i => i.UserEmaill == value["RECOVERY_EMAIL"].ToString());
+            // query through database and store email in recovery_email_temp
+                
+
+            
+                if (value["RECOVERY_EMAIL"].ToString() == Userr.UserEmaill)
                 {
                     // string gen_recoveryToken_tmp=
-                    JwtSecurityToken objecttmp = new JwtSecurityToken();
+                    JwtSecurityToken recoveryToken = new JwtSecurityToken();
 
-                    objecttmp = new Classes.Token().GenerateRecoveryToken(value["RECOVERY_EMAIL"].ToString());
+                    recoveryToken = new Classes.Token().GenerateRecoveryToken(value["RECOVERY_EMAIL"].ToString());
                     Classes.CodeGenerator recovery_code_temp = new Classes.CodeGenerator();
                     string recoverycode_stringtemp = recovery_code_temp.RecoveryCodeGenerator();
 
@@ -100,20 +113,32 @@ namespace Checkar_webAPI_core.Controllers
 
 
                     Classes.Mailer mail_temp_obj = new Classes.Mailer();
-                    mail_temp_obj.sendRecoveryMail(value["RECOVERY_EMAIL"].ToString(), new JwtSecurityTokenHandler().WriteToken(objecttmp), recoverycode_stringtemp);
+                    mail_temp_obj.sendRecoveryMail(value["RECOVERY_EMAIL"].ToString(), new JwtSecurityTokenHandler().WriteToken(recoveryToken), recoverycode_stringtemp);
+
+
+                    returnObject.Add("RETURN_CODE", 1);
+                    returnObject.Add("RECOVERY_TOKEN", new JwtSecurityTokenHandler().WriteToken(recoveryToken));
+
+                }
+                else
+                {
+                    returnObject.Add("RETURN_CODE", 2);
+                    returnObject.Add("RECOVERY_TOKEN", null);
                 }
             }
             catch(Exception ex)
             {
-                returnObject.Add("RETURN_CODE",3, "RECOVERY_TOKEN",null);
+                System.Diagnostics.Debug.WriteLine("EXCEPTION IN ACCOUNT RECOVERY = " + ex);
+                returnObject.Add("RETURN_CODE", 3);
+                returnObject.Add("RECOVERY_TOKEN",null);
             }
 
 
-
-
-
-
-            
+            /*
+             * . RETURN_CODE: 1 = RECOVERY MAIL IS SENT
+                . RETURN_CODE: 2 = RECOVERY MAIL DOES NOT EXIST
+                . RETURN_CODE: 3 = EXCEPTION
+             * */
             return returnObject;
         }
 

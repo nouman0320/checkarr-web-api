@@ -99,7 +99,7 @@ namespace Checkar_webAPI_core.Controllers
 
                     // sending activation mail
                     Classes.Mailer currentMailer = new Classes.Mailer();
-                    currentMailer.sendActivationMail(user.Email, activationToken, activationCode);
+                    currentMailer.sendActivationMail(user.Email, new JwtSecurityTokenHandler().WriteToken(activationToken), activationCode);
 
                     
                     //System.Diagnostics.Debug.Print("===========================\n");
