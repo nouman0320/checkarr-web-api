@@ -161,12 +161,12 @@ namespace Checkar_webAPI_core.Controllers
                 // query through database and store in user_id and activation_code and check it
                 user_id = RecCode.UserId.Value;
                 activation_code = RecCode.ConfirmationCode;
-                if (value["Activation_Code"].ToString() == activation_code)// && value["User_ID"].ToString() == user_id)
+                if (value["Activation_Code"].ToString() == activation_code && value["User_ID"].Value<Int32>() == user_id)
                 {
                     // if condition true then perform this action in database updated user account activation status in table "true"
 
                     checkarr.UserLog Userr = registerDBContext.UserLog.FirstOrDefault(i => i.IduserLog == RecCode.UserId);
-                    Userr.Activated = "F";
+                    Userr.Activated = "T";
                     registerDBContext.SaveChanges();
 
                     string activation_token_tempstr = value["ACTIVATION_TOKEN"].ToString();
