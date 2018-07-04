@@ -34,15 +34,22 @@ namespace Checkar_webAPI_core.Controllers
         public JObject Recovery_Confirmation([FromBody]JObject value)
         {
             JObject returnObject = new JObject();
+            
             try
             {
                 // query through database and check if codes matches in the confirmation codes table && code is not expired
-                if () // check here 
+                checkarr.checkarrContext registerDBContext = new checkarr.checkarrContext();
+                string str_code = value["Activation_Code"].ToString();
+                int usr_id = value["User_ID"].Value<int>("User_ID");
+                string rec_token = value["RECOVERY_TOKEN"].ToString();
+                checkarr.Confirmationcode UserCode = registerDBContext.Confirmationcode.FirstOrDefault(i => i.ConfirmationCode == str_code);
+                checkarr.UserLog Userr = registerDBContext.UserLog.FirstOrDefault(i => i.IduserLog == UserCode.UserId);
+                if (UserCode!=null && UserCode.UserId == usr_id && UserCode.ExpiryTime > DateTime.Now) // check here 
                 {
-                    if (new Classes.Token().ValidateRecoveryToken(value["RECOVERY_TOKEN"]),) // pass second argument recovery eamil fetch from database
+                    if (new Classes.Token().ValidateRecoveryToken(rec_token, Userr.UserEmaill)) // pass second argument recovery eamil fetch from database
                 {
                         JwtSecurityToken objecttmp = new JwtSecurityToken();
-                        objecttmp = new Classes.Token().GenerateResetToken() // pass argument recovery email to that function
+                        objecttmp = new Classes.Token().GenerateResetToken(Userr.UserEmaill); // pass argument recovery email to that function
 
                 }
 
@@ -61,6 +68,8 @@ namespace Checkar_webAPI_core.Controllers
         public JObject Account_recovery([FromBody]JObject value)
         {
             string recovery_email_temp = "";
+            checkarr.checkarrContext registerDBContext = new checkarr.checkarrContext();
+            checkarr.UserLog Userr = registerDBContext.UserLog.FirstOrDefault(i => i.UserEmaill == value["RECOVERY_EMAIL"].ToString());
             // query through database and store email in recovery_email_temp
             JObject returnObject = new JObject();
 
@@ -74,7 +83,19 @@ namespace Checkar_webAPI_core.Controllers
                     objecttmp = new Classes.Token().GenerateRecoveryToken(value["RECOVERY_EMAIL"].ToString());
                     Classes.CodeGenerator recovery_code_temp = new Classes.CodeGenerator();
                     string recoverycode_stringtemp = recovery_code_temp.RecoveryCodeGenerator();
+
                     //SAVE recoverycode_stringtemp  TO TABLE CONFIRMATION CODES WITH TYPE "RECOVERY_CODE"
+                    checkarr.Confirmationcode newcode = new checkarr.Confirmationcode();
+                    newcode.ConfirmationCode = recoverycode_stringtemp;
+                    newcode.ConfirmationType = "RECOVERY_CODE";
+                    newcode.GeneratedOn = DateTime.UtcNow;
+                    newcode.ExpiryTime = DateTime.UtcNow.AddDays(1);
+                    newcode.Used = "F";
+                    newcode.UserId = Userr.IduserLog;
+
+                    registerDBContext.Confirmationcode.Add(newcode);
+                    registerDBContext.SaveChanges();
+                    
 
 
 
@@ -101,21 +122,37 @@ namespace Checkar_webAPI_core.Controllers
         public JObject Account_activation([FromBody]JObject value)
         {
             JObject returnObject = new JObject();
+            
             try
             {
                 string activation_code = "";
-                string user_id = "";
+                int user_id;
+                checkarr.checkarrContext registerDBContext = new checkarr.checkarrContext();
+                string rec_code = value["RECOVERY_CODE"].ToString();
+                string rec_token = value["RECOVERY_TOKEN"].ToString();
+                checkarr.Confirmationcode RecCode = registerDBContext.Confirmationcode.FirstOrDefault(i => i.ConfirmationCode == rec_code);
                 // query through database and store in user_id and activation_code and check it
-                if (value["Activation_Code"].ToString() == activation_code && value["User_ID"].ToString() == user_id)
+                user_id = RecCode.UserId.Value;
+                activation_code = RecCode.ConfirmationCode;
+                if (value["Activation_Code"].ToString() == activation_code)// && value["User_ID"].ToString() == user_id)
                 {
-               // if condition true then perform this action in database updated user account activation status in table "true"
+                    // if condition true then perform this action in database updated user account activation status in table "true"
+
+                    checkarr.UserLog Userr = registerDBContext.UserLog.FirstOrDefault(i => i.IduserLog == RecCode.UserId);
+                    Userr.Activated = "F";
+                    registerDBContext.SaveChanges();
+
                     string activation_token_tempstr = value["ACTIVATION_TOKEN"].ToString();
                     Classes.Token object1 = new Classes.Token();
-                    if (object1.ValidateActivationToken(activation_token_tempstr, Int32.Parse(user_id)))
+                    if (object1.ValidateActivationToken(activation_token_tempstr, user_id))
                     {
 
                         Boolean check_code_expirytime = false;
+
                         // use query and check code is not expire and change variable check_code_expirytime true
+
+                        if (RecCode.ExpiryTime > DateTime.Now)
+                            check_code_expirytime = true;
                         if (check_code_expirytime)
                         {
 
