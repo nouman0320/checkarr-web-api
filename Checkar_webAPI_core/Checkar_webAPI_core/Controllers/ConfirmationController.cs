@@ -86,11 +86,15 @@ namespace Checkar_webAPI_core.Controllers
                 
                 checkarr.checkarrContext registerDBContext = new checkarr.checkarrContext();
                 checkarr.UserLog Userr = registerDBContext.UserLog.FirstOrDefault(i => i.UserEmaill == value["RECOVERY_EMAIL"].ToString());
-            // query through database and store email in recovery_email_temp
-                
+                // query through database and store email in recovery_email_temp
 
-            
-                if (value["RECOVERY_EMAIL"].ToString() == Userr.UserEmaill)
+                if (Userr == null)
+                {
+                    returnObject.Add("RETURN_CODE", 2);
+                    returnObject.Add("RECOVERY_TOKEN", null);
+                }
+
+                else if (value["RECOVERY_EMAIL"].ToString() == Userr.UserEmaill)
                 {
                     // string gen_recoveryToken_tmp=
                     JwtSecurityToken recoveryToken = new JwtSecurityToken();
@@ -193,6 +197,7 @@ namespace Checkar_webAPI_core.Controllers
                         }
 
                     }
+                    else returnObject.Add("RETURN_CODE", 4); 
                 }
                 else
                 {
@@ -202,12 +207,19 @@ namespace Checkar_webAPI_core.Controllers
             catch(Exception exce)
             {
 
-                returnObject.Add("RETURN_CODE", 4);
+                returnObject.Add("RETURN_CODE", 5);
             }
+            /*
+             * 
+             * . RETURN_CODE: 1  = Account is activated
+                . RETURN_CODE: 2  = CODE IS INVALID
+                . RETURN_CODE: 3  = CODE IS EXPIRED
+                . RETURN_CODE: 4  = RECOVERY TOKEN IS INVALID
+                . RETURN_CODE: 5  = EXCEPTION 
+             * */
 
 
-          
-            
+
             return returnObject;
         }
         
