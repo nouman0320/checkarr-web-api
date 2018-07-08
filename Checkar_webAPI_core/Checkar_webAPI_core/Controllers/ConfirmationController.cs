@@ -14,6 +14,7 @@ namespace Checkar_webAPI_core.Controllers
     [EnableCors("AllowAnyOrigin")]
     public class ConfirmationController : Controller
     {
+        checkarr.checkarrContext registerDBContext = new checkarr.checkarrContext();
         // POST: api/Confirmation
         [HttpPost]
         [ActionName("Account_activation")]
@@ -38,6 +39,8 @@ namespace Checkar_webAPI_core.Controllers
                     // MSK => GIVE ME HERE A OBJECT FOR ACTIVATION CODE FROM CONFIRMATION CODES TABLE 
                     // MATCH USING PROVIDED USER ID and ACTIVATION CODE and code type "ACTIVATION CODE"
 
+                    checkarr.Confirmationcode ccode = registerDBContext.Confirmationcode.FirstOrDefault(i => i.ConfirmationCode == activationCode && i.ConfirmationType== "ACTIVATION CODE" && i.UserId == userId);
+                    
 
                     returnObject.Add("RETURN_CODE", 1);
                 }
@@ -161,6 +164,9 @@ namespace Checkar_webAPI_core.Controllers
 
                     // MSK => GIVE ME HERE A OBJECT FOR RECOVERY CODE FROM CONFIRMATION CODES TABLE 
                     // MATCH USING PROVIDED EMAIL and CODE and type "RECOVERY CODE"
+                    checkarr.UserLog Userr = registerDBContext.UserLog.FirstOrDefault(i => i.UserEmaill == recoveryEmail);
+                    checkarr.Confirmationcode ccode1 = registerDBContext.Confirmationcode.FirstOrDefault(i => i.ConfirmationCode == recoveryCode && i.ConfirmationType == "RECOVERY CODE" &&  Userr.IduserLog == i.UserId);
+
 
                     returnObject.Add("RETURN_CODE", 1);
                 }
