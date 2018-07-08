@@ -16,62 +16,54 @@ namespace Checkar_webAPI_core.Controllers
     {
         // POST: api/Confirmation
         [HttpPost]
-        [ActionName("Recovery_Confirmation")]
-        public JObject Recovery_Confirmation([FromBody]JObject value)
+        [ActionName("Account_activation")]
+        public JObject Account_activation([FromBody]JObject value)
         {
             JObject returnObject = new JObject();
             
             try
             {
-                // query through database and check if codes matches in the confirmation codes table && code is not expired
-                checkarr.checkarrContext registerDBContext = new checkarr.checkarrContext();
-                string str_code = value["Activation_Code"].ToString();
-                int usr_id = value["User_ID"].Value<int>("User_ID");
-                string rec_token = value["RECOVERY_TOKEN"].ToString();
-                checkarr.Confirmationcode UserCode = registerDBContext.Confirmationcode.FirstOrDefault(i => i.ConfirmationCode == str_code);
-                checkarr.UserLog Userr = registerDBContext.UserLog.FirstOrDefault(i => i.IduserLog == UserCode.UserId);
-                if (UserCode!=null && UserCode.UserId == usr_id && UserCode.ExpiryTime >= DateTime.UtcNow) // check here 
+                String activationCode = value["ACTIVATION_CODE"].ToString();
+                int userId = Int32.Parse(value["USER_ID"].ToString());
+                String activationToken = value["ACTIVATION_TOKEN"].ToString();
+
+                Classes.Token tokenClassObj = new Classes.Token();
+
+                Boolean isActivationTokenValid = tokenClassObj.ValidateActivationToken(activationToken, userId);
+
+                if (isActivationTokenValid)
                 {
+                    // activation token is valid
 
-                    if (new Classes.Token().ValidateRecoveryToken(rec_token, Userr.UserEmaill)) // pass second argument recovery eamil fetch from database
-                    {
-                        JwtSecurityToken resetToken = new JwtSecurityToken();
-                        resetToken = new Classes.Token().GenerateResetToken(Userr.UserEmaill); // pass argument recovery email to that function
+                    // MSK => GIVE ME HERE A OBJECT FOR ACTIVATION CODE FROM CONFIRMATION CODES TABLE 
+                    // MATCH USING PROVIDED USER ID and ACTIVATION CODE and code type "ACTIVATION CODE"
 
 
-                        String resetTokenString = new JwtSecurityTokenHandler().WriteToken(resetToken);
-                        // recovery is success
-
-                        returnObject.Add("RETURN_CODE", 1);
-                        returnObject.Add("RESET_TOKEN", resetTokenString);
-
-                    }
-                    else
-                    {
-                        returnObject.Add("RETURN_CODE", 3);
-                        returnObject.Add("RESET_TOKEN", null);
-                    }
-
+                    returnObject.Add("RETURN_CODE", 1);
                 }
                 else
                 {
-                    returnObject.Add("RETURN_CODE", 2);
-                    returnObject.Add("RESET_TOKEN", null);
+                    // activation token is invalid
+                    returnObject.Add("RETURN_CODE", 4);
                 }
+
             }
             catch(Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine("EXCEPTION IN RECOVERY CONFIRMATION = "+ex);
-                returnObject.Add("RETURN_CODE", 4);
-                returnObject.Add("RESET_TOKEN", null); 
+                returnObject.Add("RETURN_CODE", 5);
             }
 
 
             /*
-             * . RETURN_CODE: 1 = RECOVERY CODE IS CONFIRMED
-                . RETURN_CODE: 2 = RECOVERY CODE IS INVALID
-                . RETURN_CODE: 3 = RECOVERY TOKEN IS INVALID
-                . RETURN_CODE: 4 = EXCEPTION
+             * 
+             * 
+             * 
+             * . RETURN_CODE: 1  = Account is activated
+                . RETURN_CODE: 2  = CODE IS INVALID
+                . RETURN_CODE: 3  = CODE IS EXPIRED
+                . RETURN_CODE: 4  = TOKEN IS INVALID
+                . RETURN_CODE: 5  = EXCEPTION 
              * */
             return returnObject;
         }
@@ -149,73 +141,48 @@ namespace Checkar_webAPI_core.Controllers
         }
 
         [HttpPost]
-        [ActionName("Account_activation")]
-        public JObject Account_activation([FromBody]JObject value)
+        [ActionName("Recovery_confirmation")]
+        public JObject Recovery_confirmation([FromBody]JObject value)
         {
             JObject returnObject = new JObject();
             
             try
             {
-                string activation_code = "";
-                int user_id;
-                checkarr.checkarrContext registerDBContext = new checkarr.checkarrContext();
-                string rec_code = value["RECOVERY_CODE"].ToString();
-                string rec_token = value["RECOVERY_TOKEN"].ToString();
-                checkarr.Confirmationcode RecCode = registerDBContext.Confirmationcode.FirstOrDefault(i => i.ConfirmationCode == rec_code);
-                // query through database and store in user_id and activation_code and check it
-                user_id = RecCode.UserId.Value;
-                activation_code = RecCode.ConfirmationCode;
-                if (value["Activation_Code"].ToString() == activation_code && value["User_ID"].Value<Int32>() == user_id)
+                String recoveryCode = value["RECOVERY_CODE"].ToString();
+                String recoveryToken = value["RECOVERY_TOKEN"].ToString();
+                String recoveryEmail = value["RECOVERY_EMAIL"].ToString();
+
+                Classes.Token tokenClassObj = new Classes.Token();
+
+                Boolean isRecoveryTokenValid = tokenClassObj.ValidateRecoveryToken(recoveryToken, recoveryEmail);
+                if (isRecoveryTokenValid)
                 {
-                    // if condition true then perform this action in database updated user account activation status in table "true"
+                    // recovery token is valid
 
-                   
+                    // MSK => GIVE ME HERE A OBJECT FOR RECOVERY CODE FROM CONFIRMATION CODES TABLE 
+                    // MATCH USING PROVIDED EMAIL and CODE and type "RECOVERY CODE"
 
-                    string activation_token_tempstr = value["ACTIVATION_TOKEN"].ToString();
-                    Classes.Token object1 = new Classes.Token();
-                    if (object1.ValidateActivationToken(activation_token_tempstr, user_id))
-                    {
-
-                        Boolean check_code_expirytime = false;
-
-                        // use query and check code is not expire and change variable check_code_expirytime true
-
-                        if (RecCode.ExpiryTime > DateTime.Now)
-                            check_code_expirytime = true;
-                        if (check_code_expirytime)
-                        {
-
-                            checkarr.UserLog Userr = registerDBContext.UserLog.FirstOrDefault(i => i.IduserLog == RecCode.UserId);
-                            Userr.Activated = "T";
-                            registerDBContext.SaveChanges();
-                            returnObject.Add("RETURN_CODE", 1);
-                        }
-                        else
-                        {
-
-                            returnObject.Add("RETURN_CODE", 3);
-                        }
-
-                    }
-                    else returnObject.Add("RETURN_CODE", 4); 
+                    returnObject.Add("RETURN_CODE", 1);
                 }
                 else
                 {
-                    returnObject.Add("RETURN_CODE", 2);
+                    // recovery token is invalid
+                    returnObject.Add("RETURN_CODE", 3);
                 }
-            }
-            catch(Exception exce)
-            {
 
-                returnObject.Add("RETURN_CODE", 5);
+            }
+            catch(Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine("Exception in RECOVERY_CONFIRMATION " + e);
+                returnObject.Add("RETURN_CODE", 4);
             }
             /*
+             * RESET_TOKEN +  
              * 
-             * . RETURN_CODE: 1  = Account is activated
-                . RETURN_CODE: 2  = CODE IS INVALID
-                . RETURN_CODE: 3  = CODE IS EXPIRED
-                . RETURN_CODE: 4  = RECOVERY TOKEN IS INVALID
-                . RETURN_CODE: 5  = EXCEPTION 
+             * . RETURN_CODE: 1 = RECOVERY CODE IS CONFIRMED
+                . RETURN_CODE: 2 = RECOVERY CODE IS INVALID
+                . RETURN_CODE: 3 = RECOVERY TOKEN IS INVALID
+                . RETURN_CODE: 4 = EXCEPTION
              * */
 
 
