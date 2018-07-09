@@ -43,7 +43,11 @@ namespace Checkar_webAPI_core.Controllers
                         // code is valid
                         if(ccode.ExpiryTime >= DateTime.UtcNow)
                         {
-                            // not expired
+                            checkarr.UserLog User1 = registerDBContext.UserLog.FirstOrDefault(i => i.IduserLog == userId);
+                            if(User1!=null )
+                            {
+                                User1.Activated = "T";
+                            }
                             returnObject.Add("RETURN_CODE", 1);
 
                         }
