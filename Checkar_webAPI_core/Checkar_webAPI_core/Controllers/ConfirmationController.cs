@@ -36,13 +36,30 @@ namespace Checkar_webAPI_core.Controllers
                 {
                     // activation token is valid
 
-                    // MSK => GIVE ME HERE A OBJECT FOR ACTIVATION CODE FROM CONFIRMATION CODES TABLE 
-                    // MATCH USING PROVIDED USER ID and ACTIVATION CODE and code type "ACTIVATION CODE"
-
+                   
                     checkarr.Confirmationcode ccode = registerDBContext.Confirmationcode.FirstOrDefault(i => i.ConfirmationCode == activationCode && i.ConfirmationType== "ACTIVATION CODE" && i.UserId == userId);
-                    
+                    if(ccode != null && ccode.ConfirmationCode.Equals(activationCode))
+                    {
+                        // code is valid
+                        if(ccode.ExpiryTime >= DateTime.UtcNow)
+                        {
+                            // not expired
+                            returnObject.Add("RETURN_CODE", 1);
 
-                    returnObject.Add("RETURN_CODE", 1);
+                        }
+                        else
+                        {
+                            // code is expired
+                            returnObject.Add("RETURN_CODE", 3);
+                        }
+                    }
+                    else
+                    {
+                        // code ins invalid
+                        returnObject.Add("RETURN_CODE", 2);
+                    }
+
+                    
                 }
                 else
                 {
@@ -165,14 +182,36 @@ namespace Checkar_webAPI_core.Controllers
                     // MSK => GIVE ME HERE A OBJECT FOR RECOVERY CODE FROM CONFIRMATION CODES TABLE 
                     // MATCH USING PROVIDED EMAIL and CODE and type "RECOVERY CODE"
                     checkarr.UserLog Userr = registerDBContext.UserLog.FirstOrDefault(i => i.UserEmaill == recoveryEmail);
-                    checkarr.Confirmationcode ccode1 = registerDBContext.Confirmationcode.FirstOrDefault(i => i.ConfirmationCode == recoveryCode && i.ConfirmationType == "RECOVERY CODE" &&  Userr.IduserLog == i.UserId);
 
+                    if(Userr != null)
+                    {
+                        System.Diagnostics.Debug.WriteLine("USER IF ====>"+Userr.UserFullname);
 
-                    returnObject.Add("RETURN_CODE", 1);
+                        checkarr.Confirmationcode ccode1 = registerDBContext.Confirmationcode.FirstOrDefault(i => i.ConfirmationCode == recoveryCode && i.ConfirmationType == "RECOVERY CODE" && Userr.IduserLog == i.UserId);
+                        if(ccode1 != null)
+                        {
+                            JwtSecurityToken resetToken = tokenClassObj.GenerateResetToken(recoveryEmail);
+                            returnObject.Add("RESET_TOKEN", new JwtSecurityTokenHandler().WriteToken(resetToken));
+                            returnObject.Add("RETURN_CODE", 1);
+                        }
+                        else
+                        {
+                            System.Diagnostics.Debug.WriteLine("CCODE IF ====>" + ccode1);
+                            // recovery code is invalid
+                            returnObject.Add("RESET_TOKEN", null);
+                            returnObject.Add("RETURN_CODE", 2);
+                        }
+                    }
+                    else
+                    {
+                        returnObject.Add("RESET_TOKEN", null);
+                        returnObject.Add("RETURN_CODE", 5);
+                    }
                 }
                 else
                 {
                     // recovery token is invalid
+                    returnObject.Add("RESET_TOKEN", null);
                     returnObject.Add("RETURN_CODE", 3);
                 }
 
@@ -180,6 +219,7 @@ namespace Checkar_webAPI_core.Controllers
             catch(Exception e)
             {
                 System.Diagnostics.Debug.WriteLine("Exception in RECOVERY_CONFIRMATION " + e);
+                returnObject.Add("RESET_TOKEN", null);
                 returnObject.Add("RETURN_CODE", 4);
             }
             /*
@@ -189,6 +229,7 @@ namespace Checkar_webAPI_core.Controllers
                 . RETURN_CODE: 2 = RECOVERY CODE IS INVALID
                 . RETURN_CODE: 3 = RECOVERY TOKEN IS INVALID
                 . RETURN_CODE: 4 = EXCEPTION
+                . RETURN_CODE: 5 = SOMETHING WENT WRONG
              * */
 
 
