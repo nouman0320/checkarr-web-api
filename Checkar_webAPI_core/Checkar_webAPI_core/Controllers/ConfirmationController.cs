@@ -47,8 +47,10 @@ namespace Checkar_webAPI_core.Controllers
                             if(User1!=null )
                             {
                                 User1.Activated = "T";
+                                registerDBContext.SaveChanges();
+                                returnObject.Add("RETURN_CODE", 1);
                             }
-                            returnObject.Add("RETURN_CODE", 1);
+                            else returnObject.Add("RETURN_CODE", 5); // exception
 
                         }
                         else
