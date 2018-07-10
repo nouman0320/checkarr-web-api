@@ -192,10 +192,11 @@ namespace Checkar_webAPI_core.Controllers
 
                     if(Userr != null)
                     {
-                        System.Diagnostics.Debug.WriteLine("USER IF ====>"+Userr.UserFullname);
-
-                        checkarr.Confirmationcode ccode1 = registerDBContext.Confirmationcode.FirstOrDefault(i => i.ConfirmationCode == recoveryCode && i.ConfirmationType == "RECOVERY CODE" && Userr.IduserLog == i.UserId);
-                        if(ccode1 != null)
+                        System.Diagnostics.Debug.WriteLine("USER IF ====>"+Userr.IduserLog);
+                        System.Diagnostics.Debug.WriteLine("USER IF ====>" + recoveryCode);
+                        checkarr.Confirmationcode ccode1 = registerDBContext.Confirmationcode.FirstOrDefault(i => i.ConfirmationCode == recoveryCode && i.ConfirmationType == "RECOVERY_CODE" && Userr.IduserLog == i.UserId);
+                        System.Diagnostics.Debug.WriteLine("USER IF ====>" + ccode1.ConfirmationType);
+                        if (ccode1 != null)
                         {
                             JwtSecurityToken resetToken = tokenClassObj.GenerateResetToken(recoveryEmail);
                             returnObject.Add("RESET_TOKEN", new JwtSecurityTokenHandler().WriteToken(resetToken));
