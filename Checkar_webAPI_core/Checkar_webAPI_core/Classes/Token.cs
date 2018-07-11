@@ -107,6 +107,50 @@ namespace Checkar_webAPI_core.Classes
         }
 
 
+        public bool ValidateResetToken(string resetToken, String resetEmail)
+        {
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(privateSecretKey));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            List<Exception> validationFailures = null;
+            SecurityToken validatedToken;
+            var validator = new JwtSecurityTokenHandler();
+
+            TokenValidationParameters validationParameters = new TokenValidationParameters();
+            validationParameters.ValidIssuer = "http://www.checkarr.com";
+            validationParameters.ValidAudience = "http://www.checkarr.com";
+            validationParameters.IssuerSigningKey = key;
+            validationParameters.ValidateIssuerSigningKey = true;
+            validationParameters.ValidateAudience = true;
+
+            if (validator.CanReadToken(resetToken))
+            {
+                ClaimsPrincipal principal;
+                try
+                {
+                    principal = validator.ValidateToken(resetToken, validationParameters, out validatedToken);
+
+                    if (principal.HasClaim(c => c.Type == ClaimTypes.Email))
+                    {
+                        String extractedRecoveryEmail = principal.Claims.Where(c => c.Type == ClaimTypes.Email).First().Value;
+                        Boolean dateV;
+                        if (validatedToken.ValidTo >= DateTime.UtcNow) dateV = true;
+                        else dateV = false;
+                        if (extractedRecoveryEmail.Equals(resetEmail) && dateV) return true;
+                        else return false;
+                    }
+                }
+                catch (Exception e)
+                {
+                    validationFailures.Add(e);
+                    System.Diagnostics.Debug.WriteLine(e);
+
+                }
+            }
+
+            return false;
+        }
+
+
         public JwtSecurityToken GenerateResetToken(String recoveryEmail)
         {
             // use this fuction to generate recovery token

@@ -37,7 +37,7 @@ namespace Checkar_webAPI_core.Controllers
                     // activation token is valid
 
                    
-                    checkarr.Confirmationcode ccode = registerDBContext.Confirmationcode.FirstOrDefault(i => i.ConfirmationCode == activationCode && i.ConfirmationType== "ACTIVATION CODE" && i.UserId == userId);
+                    checkarr.Confirmationcode ccode = registerDBContext.Confirmationcode.FirstOrDefault(i => i.ConfirmationCode == activationCode && i.ConfirmationType== "ACTIVATION_CODE" && i.UserId == userId);
                     if(ccode != null && ccode.ConfirmationCode.Equals(activationCode))
                     {
                         // code is valid
@@ -192,11 +192,9 @@ namespace Checkar_webAPI_core.Controllers
 
                     if(Userr != null)
                     {
-                        System.Diagnostics.Debug.WriteLine("USER IF ====>"+Userr.IduserLog);
-                        System.Diagnostics.Debug.WriteLine("USER IF ====>" + recoveryCode);
+                        
                         checkarr.Confirmationcode ccode1 = registerDBContext.Confirmationcode.FirstOrDefault(i => i.ConfirmationCode == recoveryCode && i.ConfirmationType == "RECOVERY_CODE" && Userr.IduserLog == i.UserId);
-                        System.Diagnostics.Debug.WriteLine("USER IF ====>" + ccode1.ConfirmationType);
-                        if (ccode1 != null)
+                        if (ccode1 != null && ccode1.ExpiryTime >= DateTime.UtcNow)
                         {
                             JwtSecurityToken resetToken = tokenClassObj.GenerateResetToken(recoveryEmail);
                             returnObject.Add("RESET_TOKEN", new JwtSecurityTokenHandler().WriteToken(resetToken));
@@ -244,17 +242,91 @@ namespace Checkar_webAPI_core.Controllers
 
             return returnObject;
         }
-        
-        // PUT: api/Confirmation/5
-      /*  [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+
+
+
+
+        [HttpPost]
+        [ActionName("Verify_reset_token")]
+        public JObject Verify_reset_token([FromBody]JObject value)
         {
+            JObject returnObject = new JObject();
+            try
+            {
+                String reset_token = value["RESET_TOKEN"].ToString();
+                String reset_email = value["RESET_EMAIL"].ToString();
+
+
+                Classes.Token TokenObj = new Classes.Token();
+
+                Boolean isResetTokenValid = TokenObj.ValidateResetToken(reset_token, reset_email);
+                returnObject.Add("RESET_TOKEN_STATUS", isResetTokenValid);
+
+
+            }
+            catch (Exception e)
+            {
+                returnObject.Add("RESET_TOKEN_STATUS", false);
+                System.Diagnostics.Debug.WriteLine("Exception in Verify reset token: " + e);
+            }
+
+            return returnObject;
+
         }
-        
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+
+        [HttpPost]
+        [ActionName("Reset_change_password")]
+        public JObject Reset_change_password([FromBody]JObject value)
         {
-        }*/
-    }
+            JObject returnObj = new JObject();
+
+            try
+            {
+                String RESET_TOKEN = value["RESET_TOKEN"].ToString();
+                String RESET_EMAIL = value["RESET_EMAIL"].ToString();
+                String NEW_PASSWORD = value["NEW_PASSWORD"].ToString();
+
+                Classes.Token TokenObj = new Classes.Token();
+
+                if(TokenObj.ValidateResetToken(RESET_TOKEN, RESET_EMAIL))
+                {
+
+                    /*
+                     * MSK UPDATE THE PASSWORD OF THE USER WITH NEW PASSWORD USING RESET EMAIL
+                     * */
+
+                    returnObj.Add("RETURN_CODE", 1); // password changed
+
+                }
+                else
+                {
+                    returnObj.Add("RETURN_CODE", 3); // reset token is not valid
+
+                }
+               
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine("Reset change password: " + e);
+                returnObj.Add("RETURN_CODE", 2); //exception
+            }
+
+            return returnObj;
+
+        }
+
+
+
+            // PUT: api/Confirmation/5
+            /*  [HttpPut("{id}")]
+              public void Put(int id, [FromBody]string value)
+              {
+              }
+
+              // DELETE: api/ApiWithActions/5
+              [HttpDelete("{id}")]
+              public void Delete(int id)
+              {
+              }*/
+        }
 }

@@ -16,10 +16,10 @@ namespace Checkar_webAPI_core.checkarr
             {
                 //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 //connection string for shahnawaz 12government$
-                optionsBuilder.UseMySql("Server=localhost;User Id=root;Password=12government$;Database=checkarr");
+                //optionsBuilder.UseMySql("Server=localhost;User Id=root;Password=12government$;Database=checkarr");
 
                 // connection string for nouman
-                //optionsBuilder.UseMySql("Server=localhost;User Id=root;Password=Password420;Database=checkarr");
+                optionsBuilder.UseMySql("Server=localhost;User Id=root;Password=Password420;Database=checkarr");
 
 
                 // connection string for sohaib
