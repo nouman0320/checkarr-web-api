@@ -290,6 +290,9 @@ namespace Checkar_webAPI_core.Controllers
 
                 if(TokenObj.ValidateResetToken(RESET_TOKEN, RESET_EMAIL))
                 {
+                    checkarr.UserLog userr2 = registerDBContext.UserLog.FirstOrDefault(i => i.UserEmaill == RESET_EMAIL);
+                    userr2.UserPassword = NEW_PASSWORD;
+                    registerDBContext.SaveChanges();
 
                     /*
                      * MSK UPDATE THE PASSWORD OF THE USER WITH NEW PASSWORD USING RESET EMAIL
