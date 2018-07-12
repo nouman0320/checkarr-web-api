@@ -16,12 +16,13 @@ namespace Checkar_webAPI_core.Controllers
     [EnableCors("AllowAnyOrigin")]
     public class HomeController : Controller
     {
+        checkarr.checkarrContext registerDBContext = new checkarr.checkarrContext();
         // GET: api/Home
-       /* [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }*/
+        /* [HttpGet]
+         public IEnumerable<string> Get()
+         {
+             return new string[] { "value1", "value2" };
+         }*/
         [HttpGet]
         [ActionName("Get01")]
         
@@ -52,11 +53,15 @@ namespace Checkar_webAPI_core.Controllers
             {
 
                 String USER_EMAIL = value["USER_EMAIL"].ToString();
-         
-                 /*
-                 * 
-                 * MSK CHECK PROVIDE ME IF USER ACCOUNT IS ACTIVATED OR NOT USING EMAIL
-                 * */
+
+                /*
+                * 
+                * MSK CHECK PROVIDE ME IF USER ACCOUNT IS ACTIVATED OR NOT USING EMAIL
+                * */
+                checkarr.UserLog user1 = registerDBContext.UserLog.FirstOrDefault(i=> i.UserEmaill == USER_EMAIL);
+                string check = user1.Activated;
+
+
 
             }
             catch (Exception e)
@@ -96,8 +101,17 @@ namespace Checkar_webAPI_core.Controllers
                      *  
                      * */
 
-
-                    returnObj.Add("RETURN_CODE", 1); // account is activated
+                    
+                    checkarr.Confirmationcode code1 = registerDBContext.Confirmationcode.FirstOrDefault(i => i.UserId == USER_ID);
+                    if(code1!=null)
+                    {
+                        checkarr.UserLog user1 = registerDBContext.UserLog.FirstOrDefault(i => i.IduserLog == code1.UserId);
+                        user1.Activated = "T";
+                        registerDBContext.Confirmationcode.Remove(code1);
+                        registerDBContext.SaveChanges();
+                        returnObj.Add("RETURN_CODE", 1); // account is activated
+                    }
+                    
                 }
                 else
                 {

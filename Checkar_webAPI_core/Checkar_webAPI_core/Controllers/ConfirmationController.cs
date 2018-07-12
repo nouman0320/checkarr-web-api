@@ -198,11 +198,8 @@ namespace Checkar_webAPI_core.Controllers
                             JwtSecurityToken resetToken = tokenClassObj.GenerateResetToken(recoveryEmail);
                             returnObject.Add("RESET_TOKEN", new JwtSecurityTokenHandler().WriteToken(resetToken));
                             returnObject.Add("RETURN_CODE", 1);
-
-                            /*
-                             *  MSK REMOVE RECOVERYCODE FROM THE CODE FROM THE TABLE
-                             * 
-                             * */
+                            registerDBContext.Confirmationcode.Remove(ccode1);
+                            registerDBContext.SaveChanges();
                         }
                         else
                         {
