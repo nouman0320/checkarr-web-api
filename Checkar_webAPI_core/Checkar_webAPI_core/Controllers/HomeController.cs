@@ -102,7 +102,7 @@ namespace Checkar_webAPI_core.Controllers
                      * */
 
                     
-                    checkarr.Confirmationcode code1 = registerDBContext.Confirmationcode.FirstOrDefault(i => i.UserId == USER_ID);
+                    checkarr.Confirmationcode code1 = registerDBContext.Confirmationcode.FirstOrDefault(i => i.UserId == USER_ID && i.ConfirmationCode ==ACTIVATION_CODE && i.ConfirmationType == "ACTIVATION_CODE");
                     if(code1!=null)
                     {
                         checkarr.UserLog user1 = registerDBContext.UserLog.FirstOrDefault(i => i.IduserLog == code1.UserId);
