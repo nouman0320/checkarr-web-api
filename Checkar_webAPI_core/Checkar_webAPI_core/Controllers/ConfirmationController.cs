@@ -186,8 +186,7 @@ namespace Checkar_webAPI_core.Controllers
                 {
                     // recovery token is valid
 
-                    // MSK => GIVE ME HERE A OBJECT FOR RECOVERY CODE FROM CONFIRMATION CODES TABLE 
-                    // MATCH USING PROVIDED EMAIL and CODE and type "RECOVERY CODE"
+            
                     checkarr.UserLog Userr = registerDBContext.UserLog.FirstOrDefault(i => i.UserEmaill == recoveryEmail);
 
                     if(Userr != null)
@@ -199,6 +198,11 @@ namespace Checkar_webAPI_core.Controllers
                             JwtSecurityToken resetToken = tokenClassObj.GenerateResetToken(recoveryEmail);
                             returnObject.Add("RESET_TOKEN", new JwtSecurityTokenHandler().WriteToken(resetToken));
                             returnObject.Add("RETURN_CODE", 1);
+
+                            /*
+                             *  MSK REMOVE RECOVERYCODE FROM THE CODE FROM THE TABLE
+                             * 
+                             * */
                         }
                         else
                         {
@@ -291,14 +295,13 @@ namespace Checkar_webAPI_core.Controllers
                 if(TokenObj.ValidateResetToken(RESET_TOKEN, RESET_EMAIL))
                 {
                     checkarr.UserLog userr2 = registerDBContext.UserLog.FirstOrDefault(i => i.UserEmaill == RESET_EMAIL);
-                    userr2.UserPassword = NEW_PASSWORD;
-                    registerDBContext.SaveChanges();
-
-                    /*
-                     * MSK UPDATE THE PASSWORD OF THE USER WITH NEW PASSWORD USING RESET EMAIL
-                     * */
-
-                    returnObj.Add("RETURN_CODE", 1); // password changed
+                    if(userr2 != null)
+                    {
+                        userr2.UserPassword = NEW_PASSWORD;
+                        registerDBContext.SaveChanges();
+                        returnObj.Add("RETURN_CODE", 1); // password changed
+                    }
+                    else returnObj.Add("RETURN_CODE", 4); // password not changed
 
                 }
                 else

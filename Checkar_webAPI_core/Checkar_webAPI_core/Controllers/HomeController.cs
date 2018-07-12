@@ -30,19 +30,93 @@ namespace Checkar_webAPI_core.Controllers
             return "GET 1";
         }
         
-    [HttpGet]
-    [ActionName("Get02")]
-    public string Get02()
-    {
-        return "Get 2";
-    }
+        [HttpGet]
+        [ActionName("Get02")]
+        public string Get02()
+        {
+            return "Get 2";
+        }
 
         [HttpPost]
         [ActionName("post01")]
         public void post01()
         {
         }
-        
-        
+
+        [HttpPost]
+        [ActionName("user_activation_status")]
+        public JObject user_activation_status(JObject value)
+        {
+            JObject returnObj = new JObject();
+            try
+            {
+
+                String USER_EMAIL = value["USER_EMAIL"].ToString();
+         
+                 /*
+                 * 
+                 * MSK CHECK PROVIDE ME IF USER ACCOUNT IS ACTIVATED OR NOT USING EMAIL
+                 * */
+
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine("Exception in user_activation_status: "+e);
+            }
+            return returnObj;
+        }
+
+
+        [HttpPost]
+        [ActionName("activate_user_account")]
+        public JObject activate_user_account(JObject value)
+        {
+            JObject returnObj = new JObject();
+            try
+            {
+
+                int USER_ID = int.Parse(value["USER_ID"].ToString());
+                String ACTIVATION_CODE = value["ACTIVATION_CODE"].ToString();
+                String ACTIVATION_TOKEN = value["ACTIVATION_TOKEN"].ToString();
+
+                Classes.Token tokenObj = new Classes.Token();
+                if (tokenObj.ValidateActivationToken(ACTIVATION_TOKEN, USER_ID))
+                {
+
+                    // activation token is valid
+
+                    /*
+                     * 
+                     *  MSK SEE IF ACTIVATION CODE MATCH IN THE TABLE USING USER_ID
+                     *  
+                     *  IF ACTIVATION CODE EXIST AND VALID THEN ACTIVATE THE ACCOUNT OF THE USER USING USER_ID
+                     * 
+                     *  WHEN ACCOUNT IS ACTIVATED. REMOVE THE CURRENT ACTIVATION_CODE FROM THE TABLE
+                     *  
+                     *  
+                     * */
+
+
+                    returnObj.Add("RETURN_CODE", 1); // account is activated
+                }
+                else
+                {
+
+                    returnObj.Add("RETURN_CODE", 2); // activation token is not valid
+                }
+
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine("Exception in activate_user_account: " + e);
+                returnObj.Add("RETURN_CODE", 3); // exception
+            }
+            return returnObj;
+        }
+
+
+
+
+
     }
 }
