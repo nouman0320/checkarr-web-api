@@ -52,7 +52,7 @@ namespace Checkar_webAPI_core.Classes
                 }
                 catch (Exception e)
                 {
-                    validationFailures.Add(e);
+                    //validationFailures.Add(e);
                     System.Diagnostics.Debug.WriteLine(e);
                     return false;
 
@@ -97,7 +97,7 @@ namespace Checkar_webAPI_core.Classes
                 }
                 catch (Exception e)
                 {
-                    validationFailures.Add(e);
+                    //validationFailures.Add(e);
                     System.Diagnostics.Debug.WriteLine(e);
 
                 }
@@ -141,7 +141,7 @@ namespace Checkar_webAPI_core.Classes
                 }
                 catch (Exception e)
                 {
-                    validationFailures.Add(e);
+                    //validationFailures.Add(e);
                     System.Diagnostics.Debug.WriteLine(e);
 
                 }
@@ -282,7 +282,7 @@ namespace Checkar_webAPI_core.Classes
                 }
                 catch (Exception e)
                 {
-                    validationFailures.Add(e);
+                    //validationFailures.Add(e);
                     System.Diagnostics.Debug.WriteLine(e);
 
                 }

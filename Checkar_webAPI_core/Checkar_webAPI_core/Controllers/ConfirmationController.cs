@@ -294,9 +294,18 @@ namespace Checkar_webAPI_core.Controllers
                     checkarr.UserLog userr2 = registerDBContext.UserLog.FirstOrDefault(i => i.UserEmaill == RESET_EMAIL);
                     if(userr2 != null)
                     {
-                        userr2.UserPassword = NEW_PASSWORD;
-                        registerDBContext.SaveChanges();
-                        returnObj.Add("RETURN_CODE", 1); // password changed
+                        if(userr2.UserPassword == NEW_PASSWORD)
+                        {
+                            // same password
+                            returnObj.Add("RETURN_CODE", 5);
+                        }
+                        else
+                        {
+                            userr2.UserPassword = NEW_PASSWORD;
+                            registerDBContext.SaveChanges();
+                            returnObj.Add("RETURN_CODE", 1); // password changed
+                        }
+                        
                     }
                     else returnObj.Add("RETURN_CODE", 4); // password not changed
 

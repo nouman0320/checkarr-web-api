@@ -103,13 +103,17 @@ namespace Checkar_webAPI_core.Controllers
 
                     
                     checkarr.Confirmationcode code1 = registerDBContext.Confirmationcode.FirstOrDefault(i => i.UserId == USER_ID);
-                    if(code1!=null)
+                    if(code1 != null)
                     {
                         checkarr.UserLog user1 = registerDBContext.UserLog.FirstOrDefault(i => i.IduserLog == code1.UserId);
                         user1.Activated = "T";
                         registerDBContext.Confirmationcode.Remove(code1);
                         registerDBContext.SaveChanges();
                         returnObj.Add("RETURN_CODE", 1); // account is activated
+                    }
+                    else
+                    {
+
                     }
                     
                 }
