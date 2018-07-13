@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -16,7 +17,7 @@ namespace Checkar_webAPI_core.Controllers
     [EnableCors("AllowAnyOrigin")]
     public class HomeController : Controller
     {
-        checkarr.checkarrContext registerDBContext = new checkarr.checkarrContext();
+        checkarr.checkarrContext homeDBContext = new checkarr.checkarrContext();
         // GET: api/Home
         /* [HttpGet]
          public IEnumerable<string> Get()
@@ -58,7 +59,7 @@ namespace Checkar_webAPI_core.Controllers
                 * 
                 * MSK CHECK PROVIDE ME IF USER ACCOUNT IS ACTIVATED OR NOT USING EMAIL
                 * */
-                checkarr.UserLog user1 = registerDBContext.UserLog.FirstOrDefault(i=> i.UserEmaill == USER_EMAIL);
+                checkarr.UserLog user1 = homeDBContext.UserLog.FirstOrDefault(i=> i.UserEmaill == USER_EMAIL);
                 string check = user1.Activated;
 
 
@@ -70,6 +71,64 @@ namespace Checkar_webAPI_core.Controllers
             }
             return returnObj;
         }
+
+        [HttpPost]
+        [ActionName("send_activation_mail")]
+        public JObject send_activation_mail([FromBody]JObject value)
+        {
+
+            JObject returnObj = new JObject();
+
+            try
+            {
+
+                
+
+                int USER_ID = int.Parse(value["USER_ID"].ToString());
+                String USER_EMAIL = value["USER_EMAIL"].ToString();
+
+            
+
+                Classes.CodeGenerator codeGenerator = new Classes.CodeGenerator();
+                String activationCode = codeGenerator.ActivationCodeGenerator();
+
+                // saving in confirmation code table
+                checkarr.Confirmationcode confirmationCodeModel = new checkarr.Confirmationcode();
+                confirmationCodeModel.ConfirmationCode = activationCode;
+                confirmationCodeModel.ConfirmationType = "ACTIVATION_CODE";
+                confirmationCodeModel.GeneratedOn = DateTime.UtcNow;
+                confirmationCodeModel.ExpiryTime = DateTime.UtcNow.AddDays(1);
+                confirmationCodeModel.Used = "F";
+                confirmationCodeModel.UserId = USER_ID;
+
+                homeDBContext.Confirmationcode.Add(confirmationCodeModel);
+                homeDBContext.SaveChanges();
+
+               
+                Classes.Token tokenGenerator = new Classes.Token();
+                JwtSecurityToken activationToken = tokenGenerator.GenerateActivationToken(USER_ID);
+
+
+                // sending activation mail
+                Classes.Mailer currentMailer = new Classes.Mailer();
+                currentMailer.sendActivationMail(USER_EMAIL, new JwtSecurityTokenHandler().WriteToken(activationToken), activationCode);
+
+                returnObj.Add("RETURN_CODE", 1); // mail sent
+                returnObj.Add("ACTIVATION_TOKEN", new JwtSecurityTokenHandler().WriteToken(activationToken));
+
+
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine("Exception in home controller while sending activation mail " + e);
+                returnObj.Add("RETURN_CODE", 2); // exception;
+
+            }
+
+            return returnObj;
+
+        }
+
 
 
         [HttpPost]
@@ -102,13 +161,14 @@ namespace Checkar_webAPI_core.Controllers
                      * */
 
                     
-                    checkarr.Confirmationcode code1 = registerDBContext.Confirmationcode.FirstOrDefault(i => i.UserId == USER_ID);
-                    if(code1 != null)
+                    checkarr.Confirmationcode code1 = homeDBContext.Confirmationcode.FirstOrDefault(i => i.UserId == USER_ID && i.ConfirmationCode == ACTIVATION_CODE && i.ConfirmationType == "ACTIVATION_CODE");
+                    if(code1!=null)
+
                     {
-                        checkarr.UserLog user1 = registerDBContext.UserLog.FirstOrDefault(i => i.IduserLog == code1.UserId);
+                        checkarr.UserLog user1 = homeDBContext.UserLog.FirstOrDefault(i => i.IduserLog == code1.UserId);
                         user1.Activated = "T";
-                        registerDBContext.Confirmationcode.Remove(code1);
-                        registerDBContext.SaveChanges();
+                        homeDBContext.Confirmationcode.Remove(code1);
+                        homeDBContext.SaveChanges();
                         returnObj.Add("RETURN_CODE", 1); // account is activated
                     }
                     else

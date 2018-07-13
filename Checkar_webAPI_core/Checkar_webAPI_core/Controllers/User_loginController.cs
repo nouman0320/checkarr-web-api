@@ -71,14 +71,14 @@ namespace Checkar_webAPI_core.Controllers
                         Classes.Token CurrentToken = new Classes.Token();
                         CurrentToken.GenerateToken(UserLogin.UserEmaill);
 
-                        
+
                         //System.Diagnostics.Debug.Print("===========================\n");
                         //System.Diagnostics.Debug.Print("Login POST successful");
                         //System.Diagnostics.Debug.Print("===========================\n");
                         //System.Diagnostics.Debug.Print("Password: " + user.Password + "\n");
                         //System.Diagnostics.Debug.Print("Email: " + user.Email + "\n");
                         //System.Diagnostics.Debug.Print("===========================\n");
-                        
+
 
                         return Ok(new
                         {
@@ -88,7 +88,10 @@ namespace Checkar_webAPI_core.Controllers
                             Type = "Bearer",
                             Generation = DateTime.UtcNow,
                             Expiration = CurrentToken.token.ValidTo,
-                            Issuer = CurrentToken.token.Issuer
+                            Issuer = CurrentToken.token.Issuer,
+                            activation_status = UserLogin.Activated,
+                            user_id = UserLogin.IduserLog,
+                            user_email = UserLogin.UserEmaill
                         });
                     }
                     else
