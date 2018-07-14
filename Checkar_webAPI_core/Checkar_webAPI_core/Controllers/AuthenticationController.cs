@@ -14,27 +14,12 @@ namespace Checkar_webAPI_core.Controllers
     [EnableCors("AllowAnyOrigin")]
     public class AuthenticationController : Controller
     {
-        /*
-        // GET: api/Authentication
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET: api/Authentication/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-        */
-        // POST: api/Authentication
+       
         [HttpPost]
         public JObject Post([FromBody]JObject value)
         {
             Boolean validationCheck = false;
-
+            JObject returnObject = new JObject();
             try
             {
                 //String temp = "noumanarshad0320@gmail.com";
@@ -42,30 +27,48 @@ namespace Checkar_webAPI_core.Controllers
                 Classes.Token token = new Classes.Token();
                 validationCheck = token.ValidateToken(value["AccessToken"].ToString(), value["Email"].ToString());
                 //System.Diagnostics.Debug.WriteLine("VALIDATION CHECK => "+ validationCheck);
+                returnObject.Add("AccessValidation", validationCheck);
 
-                
+
+                if(validationCheck == true)
+                {
+                    checkarr.checkarrContext checkarrDBContext = new checkarr.checkarrContext();
+                    checkarr.UserLog user1 = checkarrDBContext.UserLog.FirstOrDefault(i => i.UserEmaill == value["Email"].ToString());
+
+                    if(user1 != null)
+                    {
+                        String activation_check = user1.Activated;
+
+                        if (activation_check == "T") returnObject.Add("account_activated", true);
+                        else returnObject.Add("account_activated", false);
+
+
+                        int user_id = user1.IduserLog;
+                        returnObject.Add("user_id", user_id);
+
+                        String user_email = user1.UserEmaill;
+                        returnObject.Add("user_email", user_email);
+
+
+                    }
+                    
+                }
+               
+
+
+
+
+
             }
             catch(Exception e)
             {
                 System.Diagnostics.Debug.WriteLine("Exception in AuthenticationController" + e);
             }
 
-            JObject returnObject = new JObject();
-            returnObject.Add("AccessValidation", validationCheck);
+            
+            
             return returnObject;
 
         }
-        /*
-        // PUT: api/Authentication/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-        
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }*/
     }
 }

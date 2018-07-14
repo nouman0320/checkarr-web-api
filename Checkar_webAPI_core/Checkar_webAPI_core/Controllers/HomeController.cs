@@ -133,7 +133,7 @@ namespace Checkar_webAPI_core.Controllers
 
         [HttpPost]
         [ActionName("activate_user_account")]
-        public JObject activate_user_account(JObject value)
+        public JObject activate_user_account([FromBody]JObject value)
         {
             JObject returnObj = new JObject();
             try
@@ -173,7 +173,7 @@ namespace Checkar_webAPI_core.Controllers
                     }
                     else
                     {
-
+                        returnObj.Add("RETURN_CODE", 4); // code not found
                     }
                     
                 }
