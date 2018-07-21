@@ -111,7 +111,7 @@ namespace Checkar_webAPI_core.Controllers
 
                 // sending activation mail
                 Classes.Mailer currentMailer = new Classes.Mailer();
-                currentMailer.sendActivationMail(USER_EMAIL, new JwtSecurityTokenHandler().WriteToken(activationToken), activationCode);
+                currentMailer.sendActivationMail(USER_EMAIL, new JwtSecurityTokenHandler().WriteToken(activationToken), activationCode, USER_ID);
 
                 returnObj.Add("RETURN_CODE", 1); // mail sent
                 returnObj.Add("ACTIVATION_TOKEN", new JwtSecurityTokenHandler().WriteToken(activationToken));

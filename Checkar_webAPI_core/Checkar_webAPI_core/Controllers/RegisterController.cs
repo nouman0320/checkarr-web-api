@@ -66,6 +66,9 @@ namespace Checkar_webAPI_core.Controllers
                     registerDBContext.UserLog.Add(UserRegister);
                     registerDBContext.SaveChanges();
 
+                    Classes.Mailer currentMailer = new Classes.Mailer();
+                    currentMailer.sendWelcomeMail(user.Email);
+
                     /*
                     int newUserID;
                     // 

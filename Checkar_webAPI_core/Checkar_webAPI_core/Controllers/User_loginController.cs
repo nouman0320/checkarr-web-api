@@ -72,6 +72,9 @@ namespace Checkar_webAPI_core.Controllers
                         CurrentToken.GenerateToken(UserLogin.UserEmaill);
 
 
+                       
+
+
                         //System.Diagnostics.Debug.Print("===========================\n");
                         //System.Diagnostics.Debug.Print("Login POST successful");
                         //System.Diagnostics.Debug.Print("===========================\n");

@@ -41,7 +41,7 @@ namespace Checkar_webAPI_core.Classes
             {
                 result.Append(chars[b % (chars.Length)]);
             }
-            return result.ToString();
+            return result.ToString().ToUpper();
         }
 
     }
