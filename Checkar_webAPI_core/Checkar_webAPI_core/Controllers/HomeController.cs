@@ -194,6 +194,16 @@ namespace Checkar_webAPI_core.Controllers
 
 
 
+        [HttpPost]
+        [ActionName("update_dp")]
+        public Boolean update_dp()
+        {
+            System.Diagnostics.Debug.WriteLine("UPDATING DP !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            return true;
+        }
+
+
+
 
 
     }
