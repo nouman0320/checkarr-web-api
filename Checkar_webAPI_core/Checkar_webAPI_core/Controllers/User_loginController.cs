@@ -72,15 +72,9 @@ namespace Checkar_webAPI_core.Controllers
                         CurrentToken.GenerateToken(UserLogin.UserEmaill);
 
 
-                       
+                        JwtSecurityToken refreshToken = CurrentToken.GenerateRefreshToken(UserLogin.UserEmaill);
+                        // have to save details in database
 
-
-                        //System.Diagnostics.Debug.Print("===========================\n");
-                        //System.Diagnostics.Debug.Print("Login POST successful");
-                        //System.Diagnostics.Debug.Print("===========================\n");
-                        //System.Diagnostics.Debug.Print("Password: " + user.Password + "\n");
-                        //System.Diagnostics.Debug.Print("Email: " + user.Email + "\n");
-                        //System.Diagnostics.Debug.Print("===========================\n");
 
 
                         return Ok(new
@@ -88,10 +82,7 @@ namespace Checkar_webAPI_core.Controllers
                             Ok = 1,
                             Issued = true,
                             Token = new JwtSecurityTokenHandler().WriteToken(CurrentToken.token),
-                            Type = "Bearer",
-                            Generation = DateTime.UtcNow,
-                            Expiration = CurrentToken.token.ValidTo,
-                            Issuer = CurrentToken.token.Issuer,
+                            refresh_token = new JwtSecurityTokenHandler().WriteToken(refreshToken),
                             activation_status = UserLogin.Activated,
                             user_id = UserLogin.IduserLog,
                             user_email = UserLogin.UserEmaill

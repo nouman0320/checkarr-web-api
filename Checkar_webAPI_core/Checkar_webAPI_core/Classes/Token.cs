@@ -239,7 +239,31 @@ namespace Checkar_webAPI_core.Classes
 
             
         }
-        
+
+
+        public JwtSecurityToken GenerateRefreshToken(String email)
+        {
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Email, email),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            };
+
+            var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(privateSecretKey));
+
+
+            return new JwtSecurityToken(
+                issuer: "http://www.checkarr.com",
+                audience: "http://www.checkarr.com",
+                expires: DateTime.UtcNow.AddMonths(6),
+                claims: claims,
+                signingCredentials: new Microsoft.IdentityModel.Tokens.SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256)
+            );
+
+
+        }
+
+
         public bool ValidateToken(string incomingToken, String username)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(privateSecretKey));
@@ -267,6 +291,57 @@ namespace Checkar_webAPI_core.Classes
                         String email = principal.Claims.Where(c => c.Type == ClaimTypes.Email).First().Value;
                         // System.Diagnostics.Debug.WriteLine("++++ " + email);
                         Boolean dateV;
+                        System.Diagnostics.Debug.WriteLine("VALID TO TIME " + validatedToken.ValidTo);
+                        System.Diagnostics.Debug.WriteLine("SYSTEM TIME " + DateTime.UtcNow);
+
+                        if (validatedToken.ValidTo >= DateTime.UtcNow) dateV = true;
+                        else dateV = false;
+                        System.Diagnostics.Debug.WriteLine("VALID TO " + validatedToken.ValidTo.ToLocalTime());
+                        System.Diagnostics.Debug.WriteLine("VALID: " + dateV);
+                        if (email.Equals(username) && dateV) return true;
+                        else return false;
+                        
+                        
+                    }
+                }
+                catch (Exception e)
+                {
+                    //validationFailures.Add(e);
+                    System.Diagnostics.Debug.WriteLine(e);
+
+                }
+            }
+
+            return false;
+        }
+
+        public bool ValidateRefreshToken(string incomingToken, String username)
+        {
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(privateSecretKey));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            List<Exception> validationFailures = null;
+            SecurityToken validatedToken;
+            var validator = new JwtSecurityTokenHandler();
+
+            TokenValidationParameters validationParameters = new TokenValidationParameters();
+            validationParameters.ValidIssuer = "http://www.checkarr.com";
+            validationParameters.ValidAudience = "http://www.checkarr.com";
+            validationParameters.IssuerSigningKey = key;
+            validationParameters.ValidateIssuerSigningKey = true;
+            validationParameters.ValidateAudience = true;
+
+            if (validator.CanReadToken(incomingToken))
+            {
+                ClaimsPrincipal principal;
+                try
+                {
+                    principal = validator.ValidateToken(incomingToken, validationParameters, out validatedToken);
+
+                    if (principal.HasClaim(c => c.Type == ClaimTypes.Email))
+                    {
+                        String email = principal.Claims.Where(c => c.Type == ClaimTypes.Email).First().Value;
+                        // System.Diagnostics.Debug.WriteLine("++++ " + email);
+                        Boolean dateV;
                         //System.Diagnostics.Debug.WriteLine("VALID TO TIME " + validatedToken.ValidTo);
                         //System.Diagnostics.Debug.WriteLine("SYSTEM TIME " + DateTime.UtcNow);
 
@@ -276,8 +351,8 @@ namespace Checkar_webAPI_core.Classes
                         //System.Diagnostics.Debug.WriteLine("VALID: " + dateV);
                         if (email.Equals(username) && dateV) return true;
                         else return false;
-                        
-                        
+
+
                     }
                 }
                 catch (Exception e)
