@@ -8,6 +8,29 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc;
+using System.IO;
+using System.Net;
+using System.Net.Http;
+using System.Web;
+using System.Net.Http.Headers;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Checkar_webAPI_core.Controllers
 {
@@ -17,6 +40,12 @@ namespace Checkar_webAPI_core.Controllers
     [EnableCors("AllowAnyOrigin")]
     public class HomeController : Controller
     {
+
+        private IHostingEnvironment _env;
+        public HomeController(IHostingEnvironment env)
+        {
+            _env = env;
+        }
         checkarr.checkarrContext homeDBContext = new checkarr.checkarrContext();
         // GET: api/Home
         /* [HttpGet]
@@ -196,11 +225,41 @@ namespace Checkar_webAPI_core.Controllers
 
         [HttpPost]
         [ActionName("update_dp")]
-        public Boolean update_dp()
+        public IActionResult update_dp(IFormFile file)
         {
-            System.Diagnostics.Debug.WriteLine("UPDATING DP !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-            return true;
+
+            long size = 0;
+
+            var filename = ContentDispositionHeaderValue
+                            .Parse(file.ContentDisposition)
+                            .FileName
+                            .Trim('"');
+
+            System.Diagnostics.Debug.WriteLine("file exit!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            var webRoot = _env.WebRootPath;
+
+            var filePath = webRoot + "/Uploads" + $@"/{ filename}";
+
+
+            bool fileExists = (System.IO.File.Exists(filePath) ? true : false);
+
+            if (fileExists)
+            {
+                System.Diagnostics.Debug.WriteLine("file exit!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                Random random = new Random();
+                var randomNum = random.Next(99999);
+                filename = randomNum + filename;
+                filePath = webRoot + "/Uploads" + $@"/{ filename}";
+            }
+            size += file.Length;
+            using (FileStream fs = System.IO.File.Create(filePath))
+            {
+                file.CopyTo(fs);
+                fs.Flush();
+            }
+            return Ok(filename);
         }
+         
 
 
 
