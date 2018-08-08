@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace Checkar_webAPI_core_2._1
+namespace Checkar_webAPI_core._1
 {
     public class Program
     {

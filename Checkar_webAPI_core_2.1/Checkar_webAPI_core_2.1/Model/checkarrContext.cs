@@ -28,7 +28,7 @@ namespace Checkar_webAPI_core.Model
                 //optionsBuilder.UseMySql("Server=localhost;User Id=root;Password=12government$;Database=checkarr");
 
                 // connection string for nouman
-                optionsBuilder.UseMySql("Server=localhost;User Id=root;Password=Password420;Database=checkarr");
+                //optionsBuilder.UseMySql("Server=localhost;User Id=root;Password=Password420;Database=checkarr");
 
 
                 // connection string for sohaib

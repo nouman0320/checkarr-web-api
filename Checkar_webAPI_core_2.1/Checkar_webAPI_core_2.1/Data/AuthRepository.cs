@@ -28,6 +28,15 @@ namespace Checkar_webAPI_core.Data
         public async Task<UserLog> Register(UserLog User, string Password)
         {
             // here we have to hash password
+
+            User.Activated = "F";
+            User.Disabled = "F";
+            User.UserReg = DateTime.UtcNow;
+
+            // we have to hash and salt the password using method
+            User.UserPassword = Password;
+            //
+
             await _context.UserLog.AddAsync(User);
             await _context.SaveChangesAsync();
             return User;

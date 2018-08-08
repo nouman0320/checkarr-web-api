@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Checkar_webAPI_core.Data
 {
-    interface IAuthRepository
+    public interface IAuthRepository
     {
         Task<UserLog> Register(UserLog User, string Password);
         Task<UserLog> Login(string Email, string Password);

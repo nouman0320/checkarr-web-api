@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Checkar_webAPI_core_2._1.Controllers
+namespace Checkar_webAPI_core.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
