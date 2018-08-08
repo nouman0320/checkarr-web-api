@@ -39,14 +39,16 @@ namespace Checkar_webAPI_core.Controllers
         [HttpPost]
         public IActionResult Post([FromBody]Classes.User user)
         {
-            
-            
             try
             {
+                
                 if (user != null)
                 {
-                    
+
                     // Initializing New DBContext
+
+                    user.Email = user.Email.ToLower();
+
                     checkarr.checkarrContext loginDBContext = new checkarr.checkarrContext();
                     checkarr.UserLog UserLogin = loginDBContext.UserLog.FirstOrDefault(i => i.UserEmaill == user.Email);
                     
@@ -75,7 +77,7 @@ namespace Checkar_webAPI_core.Controllers
                         JwtSecurityToken refreshToken = CurrentToken.GenerateRefreshToken(UserLogin.UserEmaill);
                         // have to save details in database
 
-
+                        
 
                         return Ok(new
                         {

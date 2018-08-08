@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
+using Checkar_webAPI_core.Data;
 
 namespace Checkar_webAPI_core.Controllers
 {
@@ -38,7 +39,8 @@ namespace Checkar_webAPI_core.Controllers
         {
             if (user.Email != null && user.Password != null)
             {
-                
+
+                user.Email = user.Email.ToLower();
                 checkarr.checkarrContext registerDBContext = new checkarr.checkarrContext();
                 checkarr.UserLog UserRegister = registerDBContext.UserLog.FirstOrDefault(i => i.UserEmaill == user.Email);
                 
@@ -61,6 +63,11 @@ namespace Checkar_webAPI_core.Controllers
                     UserRegister.UserReg = DateTime.UtcNow;
                     UserRegister.Activated = "F";
                     UserRegister.Disabled = "F";
+
+
+ //                    AuthRepository _authRepository = new AuthRepository(registerDBContext);
+                    /* have to make this await */
+   //                 _authRepository.Register(UserRegister, user.Password);
 
                     //Adding user to the register context and saving that context
                     registerDBContext.UserLog.Add(UserRegister);

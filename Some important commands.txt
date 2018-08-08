@@ -2,4 +2,4 @@
 # RUN THIS COMMAND IN PACKAGE MANAGER OF VISUAL STUDIO
 
 
-Scaffold-DbContext "Server=localhost;User Id=root;Password=Password420;Database=checkarr" Pomelo.EntityFrameworkCore.MySql -OutputDir checkarr -Force
+Scaffold-DbContext "Server=localhost;User Id=root;Password=Password420;Database=checkarr" Pomelo.EntityFrameworkCore.MySql -OutputDir Model -Force
