@@ -6,6 +6,9 @@ using Checkar_webAPI_core.Data;
 using Checkar_webAPI_core.Dtos;
 using Checkar_webAPI_core.Model;
 using Microsoft.AspNetCore.Mvc;
+using Checkar_webAPI_core.Classes;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.Extensions.Configuration;
 
 namespace Checkar_webAPI_core.Controllers
 {
@@ -15,10 +18,12 @@ namespace Checkar_webAPI_core.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthRepository _repo;
+        private readonly IConfiguration _config;
 
-        public AuthController(IAuthRepository repo)
+        public AuthController(IAuthRepository repo, IConfiguration config)
         {
             _repo = repo;
+            _config = config;
         }
 
 
@@ -41,7 +46,35 @@ namespace Checkar_webAPI_core.Controllers
 
             var createdUser = await _repo.Register(userToCreate, _userForRegisterDto.Password);
 
+            new Mailer(_config.GetSection("AppSettings:MailerEmail").Value, _config.GetSection("AppSettings:MailerPassword").Value)
+                .sendWelcomeMail(createdUser.UserEmaill);
+
             return StatusCode(201); // have to change this later
+
+        }
+
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(userForLoginDto _userForLoginDto)
+        {
+            _userForLoginDto.Email = _userForLoginDto.Email.ToLower();
+
+            UserLog userFromRepo = await _repo.Login(_userForLoginDto.Email, _userForLoginDto.Password);
+
+            if (userFromRepo == null)
+                return Unauthorized();
+
+            var AccessToken = new Token(_config.GetSection("AppSettings:SecretKey").Value).GenerateToken(userFromRepo.UserEmaill);
+
+            return Ok(new
+            {
+                Issued = true,
+                Token = new JwtSecurityTokenHandler().WriteToken(AccessToken),
+                refresh_token = "",
+                activation_status = userFromRepo.Activated,
+                user_id = userFromRepo.IduserLog,
+                user_email = userFromRepo.UserEmaill
+            });
 
         }
     }
