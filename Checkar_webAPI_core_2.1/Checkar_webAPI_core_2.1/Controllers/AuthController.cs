@@ -9,11 +9,13 @@ using Microsoft.AspNetCore.Mvc;
 using Checkar_webAPI_core.Classes;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Cors;
 
 namespace Checkar_webAPI_core.Controllers
 {
 
     [Route("api/[controller]")]
+    [EnableCors("AllowAnyOrigin")]
     [ApiController]
     public class AuthController : ControllerBase
     {
@@ -32,6 +34,7 @@ namespace Checkar_webAPI_core.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(userForRegisterDto _userForRegisterDto)
         {
+             throw new Exception("Computer says no!!");
             _userForRegisterDto.Email = _userForRegisterDto.Email.ToLower();
 
             if (await _repo.UserExists(_userForRegisterDto.Email))

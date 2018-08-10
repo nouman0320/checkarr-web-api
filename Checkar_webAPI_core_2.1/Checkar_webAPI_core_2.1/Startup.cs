@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Checkar_webAPI_core.Data;
+using Checkar_webAPI_core.Helpers;
 using Checkar_webAPI_core.Model;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -33,7 +37,16 @@ namespace Checkar_webAPI_core._1
         {
             services.AddDbContext<checkarrContext>(x => x.UseMySql(Configuration.GetConnectionString("NoumanConnection")));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAnyOrigin",
+                    builder => builder
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                   );
+
+            }); // So that cross orgin domains can access this API
 
             services.AddScoped<IAuthRepository, AuthRepository>();
 
@@ -72,12 +85,25 @@ namespace Checkar_webAPI_core._1
             }
             else
             {
-                app.UseHsts();
+
+                app.UseExceptionHandler(builder => {
+                    builder.Run(async context => {
+                        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                        var error = context.Features.Get<IExceptionHandlerFeature>();
+
+                        if(error != null)
+                        {
+                            context.Response.AddApplicationError(error.Error.Message);
+                            await context.Response.WriteAsync(error.Error.Message);
+                        }
+                    });
+                });
+                //app.UseHsts();
             }
 
             //app.UseHttpsRedirection();
             app.UseAuthentication();
-            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyMethod()); // this is weak . should be updated later
+            app.UseCors("AllowAnyOrigin");
             app.UseMvc();
         }
     }

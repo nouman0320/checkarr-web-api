@@ -33,6 +33,11 @@ namespace Checkar_webAPI_core.Data
             User.Disabled = "F";
             User.UserReg = DateTime.UtcNow;
 
+            User.UserSex = User.UserSex.ToLower();
+            if (User.UserSex == "male") User.UserSex = "M";
+            else if (User.UserSex == "female") User.UserSex = "F";
+            else User.UserSex = "M";
+
             // we have to hash and salt the password using method
             User.UserPassword = Password;
             //

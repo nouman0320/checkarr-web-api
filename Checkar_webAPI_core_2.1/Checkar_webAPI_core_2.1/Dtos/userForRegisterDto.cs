@@ -18,8 +18,8 @@ namespace Checkar_webAPI_core.Dtos
         public string Email { get; set; }
 
         [Required]
-        [StringLength(1, MinimumLength = 1, ErrorMessage = "Sex is not in correct format")]
         public string Sex { get; set; }
+
 
 
         [Required]
