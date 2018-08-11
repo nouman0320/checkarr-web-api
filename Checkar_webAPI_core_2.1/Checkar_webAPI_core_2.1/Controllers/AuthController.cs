@@ -34,11 +34,11 @@ namespace Checkar_webAPI_core.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(userForRegisterDto _userForRegisterDto)
         {
-             throw new Exception("Computer says no!!");
+             
             _userForRegisterDto.Email = _userForRegisterDto.Email.ToLower();
 
             if (await _repo.UserExists(_userForRegisterDto.Email))
-                return BadRequest("User already exists");
+                return BadRequest("We're sorry ,this login email already exists");
 
             var userToCreate = new UserLog()
             {
@@ -71,8 +71,8 @@ namespace Checkar_webAPI_core.Controllers
 
             return Ok(new
             {
-                Issued = true,
-                Token = new JwtSecurityTokenHandler().WriteToken(AccessToken),
+                issued = true,
+                token = new JwtSecurityTokenHandler().WriteToken(AccessToken),
                 refresh_token = "",
                 activation_status = userFromRepo.Activated,
                 user_id = userFromRepo.IduserLog,

@@ -49,6 +49,8 @@ namespace Checkar_webAPI_core._1
             }); // So that cross orgin domains can access this API
 
             services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddScoped<IAccountRepository, AccountRepository>();
+
 
             String companyURL = "http://www.checkarr.com";
             String privateSecretKey = Configuration.GetSection("AppSettings:SecretKey").Value;
