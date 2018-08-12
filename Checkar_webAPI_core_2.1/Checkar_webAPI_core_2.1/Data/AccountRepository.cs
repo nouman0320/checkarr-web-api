@@ -20,9 +20,13 @@ namespace Checkar_webAPI_core.Data
             throw new NotImplementedException();
         }
 
-        public Task<bool> ChangePasswordViaReset(string token, string email, string password)
+        public async Task<bool> ChangePasswordViaReset(UserLog user, string password)
         {
-            throw new NotImplementedException();
+            user.UserPassword = password;
+            //await _context.AddAsync(user);
+            await _context.SaveChangesAsync();
+
+            return true;
         }
 
         public async Task<Confirmationcode> ConfirmRecoveryCode(string code, int userID)
@@ -35,7 +39,7 @@ namespace Checkar_webAPI_core.Data
         public async void StoreCode(Confirmationcode confirmationcode)
         {
             await _context.Confirmationcode.AddAsync(confirmationcode);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
         public async Task<UserLog> GetUserFromEmail(string email)

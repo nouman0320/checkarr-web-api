@@ -8,9 +8,10 @@ namespace Checkar_webAPI_core.Dtos
 {
     public class userForLoginDto
     {
-        [Required]
+        [Required(ErrorMessage = "Email is required")]
+        [EmailAddress(ErrorMessage = "Email is not valid")]
         public string Email { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Password is required")]
         public string Password { get; set; }
     }
 }

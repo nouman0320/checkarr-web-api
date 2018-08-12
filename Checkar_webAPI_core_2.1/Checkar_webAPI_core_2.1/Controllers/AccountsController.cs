@@ -28,6 +28,44 @@ namespace Checkar_webAPI_core.Controllers
             _authRepo = authRepo;
             _config = config;
         }
+
+        [HttpPost("recover/reset/password")]
+        public async Task<IActionResult> changeAccountPassword(newAccountPasswordDto _newAccountPasswordDto)
+        {
+            _newAccountPasswordDto.RESET_EMAIL = _newAccountPasswordDto.RESET_EMAIL.ToLower();
+
+            Token tokenService = new Token(_config.GetSection("AppSettings:SecretKey").Value);
+
+            bool isResetTokenValid = tokenService.ValidateResetToken(_newAccountPasswordDto.RESET_TOKEN, _newAccountPasswordDto.RESET_EMAIL);
+
+            if (!isResetTokenValid)
+            {
+                return BadRequest("reset session is not valid");
+            }
+
+            UserLog User = await _accountRepo.GetUserFromEmail(_newAccountPasswordDto.RESET_EMAIL);
+
+            if(User == null)
+            {
+                return BadRequest("reset email is not valid");
+            }
+
+            if(User.UserPassword == _newAccountPasswordDto.NEW_PASSWORD)
+            {
+                return BadRequest("old and new password can't be same");
+            }
+
+            bool isPasswordChanged = await _accountRepo.ChangePasswordViaReset(User, _newAccountPasswordDto.NEW_PASSWORD);
+
+            if (!isPasswordChanged)
+            {
+                return BadRequest("unable to change password right now");
+            }
+
+            return Ok();
+        }
+
+
         [HttpPost("recover/reset/confirm")]
         public IActionResult verifyResetToken(verifyResetTokenDto _verifyResetTokenDto)
         {

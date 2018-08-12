@@ -8,7 +8,7 @@ namespace Checkar_webAPI_core.Dtos
 {
     public class accountForRecoveryDto
     {
-        [Required]
+        [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Email is not in correct format")]
         public string RECOVERY_EMAIL { get; set; }
     }
