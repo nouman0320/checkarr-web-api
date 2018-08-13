@@ -15,6 +15,23 @@ namespace Checkar_webAPI_core.Data
             _context = context;
         }
 
+        public async Task<bool> StoreActivationCode(Confirmationcode _confirmationCode)
+        {
+            await _context.Confirmationcode.AddAsync(_confirmationCode);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+
+        public async Task<bool> isPasswordMatched(UserLog user, string password)
+        {
+            if(user.UserPassword == password)
+            {
+                return true;
+            }
+            return false;
+        }
+
         public Task<bool> ActivateAccount(string code, string token, string user_id)
         {
             throw new NotImplementedException();
@@ -27,6 +44,12 @@ namespace Checkar_webAPI_core.Data
             await _context.SaveChangesAsync();
 
             return true;
+        }
+
+        public async Task<Confirmationcode> GetActivationCode(string code, int userID)
+        {
+            Confirmationcode confirmationCode = await _context.Confirmationcode.FirstOrDefaultAsync(i => i.UserId == userID && i.ConfirmationCode1 == code && i.ConfirmationType == "ACTIVATION_CODE");
+            return confirmationCode;
         }
 
         public async Task<Confirmationcode> ConfirmRecoveryCode(string code, int userID)
@@ -45,9 +68,25 @@ namespace Checkar_webAPI_core.Data
         public async Task<UserLog> GetUserFromEmail(string email)
         {
             UserLog User = await _context.UserLog.FirstOrDefaultAsync(i => i.UserEmaill == email);
-            if (User == null)
-                return null;
             return User;
+        }
+
+        public async Task<UserLog> GetUserFromUserID(int id)
+        {
+            UserLog User = await _context.UserLog.FirstOrDefaultAsync(i => i.IduserLog == id);
+            return User;
+        }
+
+        public bool RemoveConfirmationCode(Confirmationcode _confirmationCode)
+        {
+            _context.Confirmationcode.Remove(_confirmationCode);
+            return true;
+        }
+
+        public async Task<bool> SaveUserDetails() {
+
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

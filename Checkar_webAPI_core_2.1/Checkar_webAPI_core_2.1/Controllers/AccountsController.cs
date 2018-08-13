@@ -29,6 +29,90 @@ namespace Checkar_webAPI_core.Controllers
             _config = config;
         }
 
+        [HttpPost("activation")]
+        public async Task<IActionResult> activateUserAccount(userForActivationDto _userForActivationDto)
+        {
+            UserLog User = await _accountRepo.GetUserFromUserID(_userForActivationDto.USER_ID);
+
+            if (User == null)
+            {
+                return BadRequest("something went wrong");
+            }
+
+            Token tokenService = new Token(_config.GetSection("AppSettings:SecretKey").Value);
+
+            bool isActivationTokenValid = tokenService.ValidateActivationToken(_userForActivationDto.ACTIVATION_TOKEN, _userForActivationDto.USER_ID);
+
+            if (!isActivationTokenValid)
+            {
+                return BadRequest("activation session is either invalid or expired");
+            }
+
+            Confirmationcode activationConfirmationCode = await _accountRepo.GetActivationCode(_userForActivationDto.ACTIVATION_CODE, _userForActivationDto.USER_ID);
+            
+            if(activationConfirmationCode == null || activationConfirmationCode.ExpiryTime < DateTime.UtcNow)
+            {
+                return BadRequest("code is either invalid or expired");
+            }
+
+            User.Activated = "T";
+
+            bool isCodeRemoved = _accountRepo.RemoveConfirmationCode(activationConfirmationCode);
+
+            if(!isCodeRemoved)
+            {
+                return BadRequest("Something went wrong");
+            }
+
+            await _accountRepo.SaveUserDetails();
+
+            return Ok();
+        }
+
+
+        [HttpPost("mail/activation")]
+        public async Task<IActionResult> sendActivationMail(mailForActivationDto _mailForActivationDto)
+        {
+            _mailForActivationDto.USER_EMAIL = _mailForActivationDto.USER_EMAIL.ToLower();
+
+            UserLog User = await _accountRepo.GetUserFromEmail(_mailForActivationDto.USER_EMAIL);
+            
+            if(User == null || User.IduserLog != _mailForActivationDto.USER_ID || User.Activated != "F")
+            {
+                return BadRequest();
+            }
+
+            CodeGenerator codeGenerator = new CodeGenerator();
+            String activationCode = codeGenerator.ActivationCodeGenerator();
+
+            Confirmationcode _confirmationCode = new Confirmationcode();
+
+            _confirmationCode.ConfirmationCode1 = activationCode;
+
+            _confirmationCode.ConfirmationType = "ACTIVATION_CODE";
+            _confirmationCode.GeneratedOn = DateTime.UtcNow;
+            _confirmationCode.ExpiryTime = DateTime.UtcNow.AddDays(1);
+            _confirmationCode.Used = "F";
+            _confirmationCode.UserId = _mailForActivationDto.USER_ID;
+
+
+
+            await _accountRepo.StoreActivationCode(_confirmationCode);
+
+
+            Token tokenGenerator = new Token(_config.GetSection("AppSettings:SecretKey").Value);
+            JwtSecurityToken activationToken = tokenGenerator.GenerateActivationToken(_mailForActivationDto.USER_ID);
+
+
+            // sending activation mail
+            Mailer currentMailer = new Mailer(_config.GetSection("AppSettings:MailerEmail").Value, _config.GetSection("AppSettings:MailerPassword").Value);
+            currentMailer.sendActivationMail(_mailForActivationDto.USER_EMAIL, new JwtSecurityTokenHandler().WriteToken(activationToken), activationCode, _mailForActivationDto.USER_ID);
+
+            return Ok(new {
+                activation_token = new JwtSecurityTokenHandler().WriteToken(activationToken)
+            });
+        }
+
         [HttpPost("recover/reset/password")]
         public async Task<IActionResult> changeAccountPassword(newAccountPasswordDto _newAccountPasswordDto)
         {
@@ -50,7 +134,8 @@ namespace Checkar_webAPI_core.Controllers
                 return BadRequest("reset email is not valid");
             }
 
-            if(User.UserPassword == _newAccountPasswordDto.NEW_PASSWORD)
+            bool isPasswordMatched = await _accountRepo.isPasswordMatched(User, _newAccountPasswordDto.NEW_PASSWORD);
+            if(isPasswordMatched)
             {
                 return BadRequest("old and new password can't be same");
             }
