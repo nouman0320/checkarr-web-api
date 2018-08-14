@@ -239,7 +239,7 @@ namespace Checkar_webAPI_core.Classes
             return new JwtSecurityToken(
                 issuer: "http://www.checkarr.com",
                 audience: "http://www.checkarr.com",
-                expires: DateTime.UtcNow.AddMinutes(60),
+                expires: DateTime.UtcNow.AddMinutes(2),
                 claims: claims,
                 signingCredentials: new Microsoft.IdentityModel.Tokens.SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256)
             );

@@ -51,6 +51,7 @@ namespace Checkar_webAPI_core._1
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IAccountRepository, AccountRepository>();
 
+            services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
 
             String companyURL = "http://www.checkarr.com";
             String privateSecretKey = Configuration.GetSection("AppSettings:SecretKey").Value;

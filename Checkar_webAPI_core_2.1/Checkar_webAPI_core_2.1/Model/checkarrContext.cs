@@ -16,6 +16,7 @@ namespace Checkar_webAPI_core.Model
         }
 
         public virtual DbSet<Confirmationcode> Confirmationcode { get; set; }
+        public virtual DbSet<DisplayPicture> DisplayPicture { get; set; }
         public virtual DbSet<TokenGen> TokenGen { get; set; }
         public virtual DbSet<UserLog> UserLog { get; set; }
 
@@ -23,16 +24,8 @@ namespace Checkar_webAPI_core.Model
         {
             if (!optionsBuilder.IsConfigured)
             {
-                //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                //connection string for shahnawaz 12government$
-                //optionsBuilder.UseMySql("Server=localhost;User Id=root;Password=12government$;Database=checkarr");
-
-                // connection string for nouman
-                //optionsBuilder.UseMySql("Server=localhost;User Id=root;Password=Password420;Database=checkarr");
-
-
-                // connection string for sohaib
-                //optionsBuilder.UseMySql("Server=localhost;User Id=root;Password=Password420;Database=checkarr");
+                // #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseMySql("Server=localhost;User Id=root;Password=Password420;Database=checkarr");
             }
         }
 
@@ -64,6 +57,37 @@ namespace Checkar_webAPI_core.Model
                 entity.Property(e => e.Used)
                     .HasColumnName("used")
                     .HasColumnType("char(1)");
+
+                entity.Property(e => e.UserId)
+                    .HasColumnName("user_id")
+                    .HasColumnType("int(11)");
+            });
+
+            modelBuilder.Entity<DisplayPicture>(entity =>
+            {
+                entity.ToTable("display_picture");
+
+                entity.HasIndex(e => e.Id)
+                    .HasName("id_UNIQUE")
+                    .IsUnique();
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.Active)
+                    .IsRequired()
+                    .HasColumnName("active")
+                    .HasColumnType("char(1)");
+
+                entity.Property(e => e.CreationDate)
+                    .HasColumnName("creation_date")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.PublicId)
+                    .IsRequired()
+                    .HasColumnName("public_id")
+                    .HasColumnType("varchar(45)");
 
                 entity.Property(e => e.UserId)
                     .HasColumnName("user_id")
@@ -112,9 +136,25 @@ namespace Checkar_webAPI_core.Model
                     .HasColumnName("iduser_log")
                     .HasColumnType("int(11)");
 
-                entity.Property(e => e.Activated).HasColumnType("char(1)");
+                entity.Property(e => e.Activated)
+                    .HasColumnType("char(1)")
+                    .HasDefaultValueSql("'F'");
 
-                entity.Property(e => e.Disabled).HasColumnType("char(1)");
+                entity.Property(e => e.City)
+                    .HasColumnName("city")
+                    .HasColumnType("varchar(45)");
+
+                entity.Property(e => e.Country)
+                    .HasColumnName("country")
+                    .HasColumnType("varchar(45)");
+
+                entity.Property(e => e.Disabled)
+                    .HasColumnType("char(1)")
+                    .HasDefaultValueSql("'F'");
+
+                entity.Property(e => e.DpId)
+                    .HasColumnName("dp_id")
+                    .HasColumnType("int(11)");
 
                 entity.Property(e => e.UserEmaill)
                     .IsRequired()

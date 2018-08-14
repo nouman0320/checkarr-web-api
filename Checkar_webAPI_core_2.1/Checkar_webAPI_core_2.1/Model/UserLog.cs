@@ -13,5 +13,8 @@ namespace Checkar_webAPI_core.Model
         public string UserPassword { get; set; }
         public string Activated { get; set; }
         public string Disabled { get; set; }
+        public int? DpId { get; set; }
+        public string City { get; set; }
+        public string Country { get; set; }
     }
 }

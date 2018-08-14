@@ -126,7 +126,7 @@ namespace Checkar_webAPI_core.Controllers
             _userForRegisterDto.Email = _userForRegisterDto.Email.ToLower();
 
             if (await _repo.UserExists(_userForRegisterDto.Email))
-                return BadRequest("We're sorry ,this login email already exists");
+                return BadRequest("This email is already associated with other account");
 
             var userToCreate = new UserLog()
             {
