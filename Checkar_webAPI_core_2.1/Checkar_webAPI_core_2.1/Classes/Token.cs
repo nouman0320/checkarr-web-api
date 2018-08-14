@@ -225,11 +225,11 @@ namespace Checkar_webAPI_core.Classes
 
 
 
-        public JwtSecurityToken GenerateToken(String email)
+        public JwtSecurityToken GenerateToken(int user_id)
         {
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Email, email),
+                new Claim(JwtRegisteredClaimNames.Sid, user_id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
@@ -239,7 +239,7 @@ namespace Checkar_webAPI_core.Classes
             return new JwtSecurityToken(
                 issuer: "http://www.checkarr.com",
                 audience: "http://www.checkarr.com",
-                expires: DateTime.UtcNow.AddMinutes(2),
+                expires: DateTime.UtcNow.AddMinutes(60),
                 claims: claims,
                 signingCredentials: new Microsoft.IdentityModel.Tokens.SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256)
             );
@@ -248,11 +248,11 @@ namespace Checkar_webAPI_core.Classes
         }
 
 
-        public JwtSecurityToken GenerateRefreshToken(String email)
+        public JwtSecurityToken GenerateRefreshToken(int user_id)
         {
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Email, email),
+                new Claim(JwtRegisteredClaimNames.Sid, user_id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
@@ -271,7 +271,7 @@ namespace Checkar_webAPI_core.Classes
         }
 
 
-        public bool ValidateToken(string incomingToken, String username)
+        public bool ValidateToken(string incomingToken, int user_id)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(privateSecretKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -293,9 +293,9 @@ namespace Checkar_webAPI_core.Classes
                 {
                     principal = validator.ValidateToken(incomingToken, validationParameters, out validatedToken);
 
-                    if (principal.HasClaim(c => c.Type == ClaimTypes.Email))
+                    if (principal.HasClaim(c => c.Type == JwtRegisteredClaimNames.Sid))
                     {
-                        String email = principal.Claims.Where(c => c.Type == ClaimTypes.Email).First().Value;
+                        String _user_id = principal.Claims.Where(c => c.Type == JwtRegisteredClaimNames.Sid).First().Value;
                         // System.Diagnostics.Debug.WriteLine("++++ " + email);
                         Boolean dateV;
                         System.Diagnostics.Debug.WriteLine("VALID TO TIME " + validatedToken.ValidTo);
@@ -305,7 +305,7 @@ namespace Checkar_webAPI_core.Classes
                         else dateV = false;
                         System.Diagnostics.Debug.WriteLine("VALID TO " + validatedToken.ValidTo.ToLocalTime());
                         System.Diagnostics.Debug.WriteLine("VALID: " + dateV);
-                        if (email.Equals(username) && dateV) return true;
+                        if (_user_id.Equals(user_id.ToString()) && dateV) return true;
                         else return false;
 
 
@@ -322,7 +322,7 @@ namespace Checkar_webAPI_core.Classes
             return false;
         }
 
-        public bool ValidateRefreshToken(string incomingToken, String username)
+        public bool ValidateRefreshToken(string incomingToken, int user_id)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(privateSecretKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -344,9 +344,9 @@ namespace Checkar_webAPI_core.Classes
                 {
                     principal = validator.ValidateToken(incomingToken, validationParameters, out validatedToken);
 
-                    if (principal.HasClaim(c => c.Type == ClaimTypes.Email))
+                    if (principal.HasClaim(c => c.Type == JwtRegisteredClaimNames.Sid))
                     {
-                        String email = principal.Claims.Where(c => c.Type == ClaimTypes.Email).First().Value;
+                        String _user_id = principal.Claims.Where(c => c.Type == JwtRegisteredClaimNames.Sid).First().Value;
                         // System.Diagnostics.Debug.WriteLine("++++ " + email);
                         Boolean dateV;
                         //System.Diagnostics.Debug.WriteLine("VALID TO TIME " + validatedToken.ValidTo);
@@ -356,7 +356,7 @@ namespace Checkar_webAPI_core.Classes
                         else dateV = false;
                         //System.Diagnostics.Debug.WriteLine("VALID TO " + validatedToken.ValidTo.ToLocalTime());
                         //System.Diagnostics.Debug.WriteLine("VALID: " + dateV);
-                        if (email.Equals(username) && dateV) return true;
+                        if (_user_id.Equals(user_id.ToString()) && dateV) return true;
                         else return false;
 
 

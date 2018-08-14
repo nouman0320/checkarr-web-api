@@ -12,7 +12,6 @@ namespace Checkar_webAPI_core.Dtos
         public string refresh_token { get; set; }
 
         [Required]
-        [EmailAddress(ErrorMessage = "Email is not valid")]
-        public string email { get; set; }
+        public int user_id { get; set; }
     }
 }

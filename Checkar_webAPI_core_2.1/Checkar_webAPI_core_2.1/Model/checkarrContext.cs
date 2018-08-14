@@ -24,7 +24,7 @@ namespace Checkar_webAPI_core.Model
         {
             if (!optionsBuilder.IsConfigured)
             {
-                // #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseMySql("Server=localhost;User Id=root;Password=Password420;Database=checkarr");
             }
         }
@@ -71,6 +71,9 @@ namespace Checkar_webAPI_core.Model
                     .HasName("id_UNIQUE")
                     .IsUnique();
 
+                entity.HasIndex(e => e.UserId)
+                    .HasName("user_id_idx");
+
                 entity.Property(e => e.Id)
                     .HasColumnName("id")
                     .HasColumnType("int(11)");
@@ -92,6 +95,11 @@ namespace Checkar_webAPI_core.Model
                 entity.Property(e => e.UserId)
                     .HasColumnName("user_id")
                     .HasColumnType("int(11)");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.DisplayPicture)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("user_id");
             });
 
             modelBuilder.Entity<TokenGen>(entity =>
@@ -151,10 +159,6 @@ namespace Checkar_webAPI_core.Model
                 entity.Property(e => e.Disabled)
                     .HasColumnType("char(1)")
                     .HasDefaultValueSql("'F'");
-
-                entity.Property(e => e.DpId)
-                    .HasColumnName("dp_id")
-                    .HasColumnType("int(11)");
 
                 entity.Property(e => e.UserEmaill)
                     .IsRequired()

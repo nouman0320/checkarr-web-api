@@ -10,8 +10,7 @@ namespace Checkar_webAPI_core.Dtos
     {
         [Required(ErrorMessage = "Access token is required")]
         public string AccessToken { get; set; }
-        [Required(ErrorMessage = "Email is required")]
-        [EmailAddress(ErrorMessage = "Email is not valid")]
-        public string Email { get; set; }
+        [Required(ErrorMessage = "user_id is required")]
+        public int user_id { get; set; }
     }
 }

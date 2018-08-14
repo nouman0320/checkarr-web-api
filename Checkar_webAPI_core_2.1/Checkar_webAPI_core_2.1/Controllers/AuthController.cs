@@ -34,21 +34,20 @@ namespace Checkar_webAPI_core.Controllers
         [HttpPost("token/access/refresh")]
         public async Task<IActionResult> refreshAccessToken(refreshAccessTokenDto _refreshAccessTokenDto)
         {
-            _refreshAccessTokenDto.email = _refreshAccessTokenDto.email.ToLower();
 
             Token tokenService = new Token(_config.GetSection("AppSettings:SecretKey").Value);
 
-            bool isRefreshTokenValid = tokenService.ValidateRefreshToken(_refreshAccessTokenDto.refresh_token, _refreshAccessTokenDto.email);
+            bool isRefreshTokenValid = tokenService.ValidateRefreshToken(_refreshAccessTokenDto.refresh_token, _refreshAccessTokenDto.user_id);
 
             if(!isRefreshTokenValid)
             {
                 return BadRequest("false");
             }
 
-            string new_refresh_token_ = new JwtSecurityTokenHandler().WriteToken(tokenService.GenerateRefreshToken(_refreshAccessTokenDto.email));
-            string new_access_token_ = new JwtSecurityTokenHandler().WriteToken(tokenService.GenerateToken(_refreshAccessTokenDto.email));
+            string new_refresh_token_ = new JwtSecurityTokenHandler().WriteToken(tokenService.GenerateRefreshToken(_refreshAccessTokenDto.user_id));
+            string new_access_token_ = new JwtSecurityTokenHandler().WriteToken(tokenService.GenerateToken(_refreshAccessTokenDto.user_id));
 
-            UserLog User = await _accountRepo.GetUserFromEmail(_refreshAccessTokenDto.email);
+            UserLog User = await _accountRepo.GetUserFromUserID(_refreshAccessTokenDto.user_id);
             if(User == null)
             {
                 return BadRequest();
@@ -78,18 +77,17 @@ namespace Checkar_webAPI_core.Controllers
         [HttpPost("token/access/validate")]
         public async Task<IActionResult> validateAccessToken(validateAccessTokenDto _validateAcessTokenDto)
         {
-            _validateAcessTokenDto.Email = _validateAcessTokenDto.Email.ToLower();
 
             Token tokenService = new Token(_config.GetSection("AppSettings:SecretKey").Value);
 
-            bool isAccessTokenValid = tokenService.ValidateToken(_validateAcessTokenDto.AccessToken, _validateAcessTokenDto.Email);
+            bool isAccessTokenValid = tokenService.ValidateToken(_validateAcessTokenDto.AccessToken, _validateAcessTokenDto.user_id);
 
             if (!isAccessTokenValid)
             {
                 return BadRequest("false");
             }
 
-            UserLog User = await _accountRepo.GetUserFromEmail(_validateAcessTokenDto.Email);
+            UserLog User = await _accountRepo.GetUserFromUserID(_validateAcessTokenDto.user_id);
 
             if(User == null)
             {
@@ -155,8 +153,8 @@ namespace Checkar_webAPI_core.Controllers
             if (userFromRepo == null)
                 return Unauthorized();
 
-            var AccessToken = new Token(_config.GetSection("AppSettings:SecretKey").Value).GenerateToken(userFromRepo.UserEmaill);
-            var RefreshToken = new Token(_config.GetSection("AppSettings:SecretKey").Value).GenerateRefreshToken(userFromRepo.UserEmaill);
+            var AccessToken = new Token(_config.GetSection("AppSettings:SecretKey").Value).GenerateToken(userFromRepo.IduserLog);
+            var RefreshToken = new Token(_config.GetSection("AppSettings:SecretKey").Value).GenerateRefreshToken(userFromRepo.IduserLog);
 
 
             return Ok(new

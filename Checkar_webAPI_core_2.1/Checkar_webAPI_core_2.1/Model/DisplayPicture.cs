@@ -10,5 +10,6 @@ namespace Checkar_webAPI_core.Model
         public DateTime CreationDate { get; set; }
         public string Active { get; set; }
         public string PublicId { get; set; }
+        public UserLog User { get; set; }
     }
 }

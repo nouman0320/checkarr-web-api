@@ -16,7 +16,7 @@ namespace Checkar_webAPI_core.Controllers
     [Route("api/[controller]")]
     [EnableCors("AllowAnyOrigin")]
     [ApiController]
-    public class AccountsController : Controller
+    public class AccountsController : ControllerBase
     {
         private readonly IAccountRepository _accountRepo;
         private readonly IAuthRepository _authRepo;

@@ -5,6 +5,11 @@ namespace Checkar_webAPI_core.Model
 {
     public partial class UserLog
     {
+        public UserLog()
+        {
+            DisplayPicture = new HashSet<DisplayPicture>();
+        }
+
         public int IduserLog { get; set; }
         public string UserFullname { get; set; }
         public string UserEmaill { get; set; }
@@ -13,8 +18,9 @@ namespace Checkar_webAPI_core.Model
         public string UserPassword { get; set; }
         public string Activated { get; set; }
         public string Disabled { get; set; }
-        public int? DpId { get; set; }
         public string City { get; set; }
         public string Country { get; set; }
+
+        public ICollection<DisplayPicture> DisplayPicture { get; set; }
     }
 }

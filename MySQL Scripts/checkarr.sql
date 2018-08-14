@@ -16,42 +16,83 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Dumping data for table `confirmationcode`
+-- Table structure for table `confirmationcode`
 --
 
-LOCK TABLES `confirmationcode` WRITE;
-/*!40000 ALTER TABLE `confirmationcode` DISABLE KEYS */;
-INSERT INTO `confirmationcode` VALUES ('PIHG9Q','RECOVERY_CODE','F',17,'2018-08-11 16:44:44','2018-08-11 16:44:44',77),('HUTHFC','RECOVERY_CODE','F',17,'2018-08-11 16:53:54','2018-08-11 16:53:54',78),('LGASSR','RECOVERY_CODE','F',17,'2018-08-11 16:58:32','2018-08-11 16:58:32',79),('R8TQWO','RECOVERY_CODE','F',17,'2018-08-11 19:11:32','2018-08-11 19:11:32',80),('GDLNMT','RECOVERY_CODE','F',17,'2018-08-11 19:14:42','2018-08-11 19:14:42',81),('1SWHJ7','RECOVERY_CODE','F',17,'2018-08-11 19:28:38','2018-08-11 19:28:38',82),('5PEA9W','RECOVERY_CODE','F',17,'2018-08-11 19:30:54','2018-08-11 19:30:54',83),('IO6I8B','RECOVERY_CODE','F',17,'2018-08-11 19:35:09','2018-08-11 19:35:09',84),('QZ0JK2','RECOVERY_CODE','F',17,'2018-08-11 19:36:32','2018-08-11 19:36:32',85),('ACC3DA','RECOVERY_CODE','F',17,'2018-08-11 19:46:49','2018-08-12 19:46:50',86),('HDXS3O','RECOVERY_CODE','F',17,'2018-08-11 19:56:35','2018-08-12 19:56:35',87),('K5F2FL','RECOVERY_CODE','F',17,'2018-08-11 20:00:39','2018-08-12 20:00:39',88),('UPMSBT','RECOVERY_CODE','F',17,'2018-08-11 20:04:30','2018-08-12 20:04:30',89),('OHOQ5L','RECOVERY_CODE','F',17,'2018-08-11 20:07:41','2018-08-12 20:07:41',90),('NJ2BVE','RECOVERY_CODE','F',17,'2018-08-11 20:11:17','2018-08-12 20:11:17',91),('QIS46P','RECOVERY_CODE','F',17,'2018-08-12 10:10:19','2018-08-13 10:10:19',92),('6IGEX9','RECOVERY_CODE','F',17,'2018-08-12 10:52:11','2018-08-13 10:52:11',93),('3DQEUI','RECOVERY_CODE','F',17,'2018-08-12 11:12:21','2018-08-13 11:12:21',94),('ZVU4UX','ACTIVATION_CODE','F',17,'2018-08-12 19:18:43','2018-08-13 19:18:43',95),('CSLNCB','ACTIVATION_CODE','F',17,'2018-08-13 10:08:50','2018-08-14 10:08:50',97),('SHDL0F','RECOVERY_CODE','F',27,'2018-08-13 10:34:08','2018-08-14 10:34:08',99),('BFHN6A','RECOVERY_CODE','F',27,'2018-08-13 15:53:05','2018-08-14 15:53:05',100),('XHOBCC','RECOVERY_CODE','F',27,'2018-08-13 15:56:53','2018-08-14 15:56:53',101),('PNI9QV','ACTIVATION_CODE','F',27,'2018-08-13 16:38:21','2018-08-14 16:38:21',102);
-/*!40000 ALTER TABLE `confirmationcode` ENABLE KEYS */;
-UNLOCK TABLES;
+DROP TABLE IF EXISTS `confirmationcode`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `confirmationcode` (
+  `confirmation_code` varchar(45) NOT NULL,
+  `confirmation_type` varchar(45) DEFAULT NULL,
+  `used` char(1) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `GeneratedOn` datetime DEFAULT NULL,
+  `ExpiryTime` datetime DEFAULT NULL,
+  `c_id` int(11) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`c_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=103 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `display_picture`
+-- Table structure for table `display_picture`
 --
 
-LOCK TABLES `display_picture` WRITE;
-/*!40000 ALTER TABLE `display_picture` DISABLE KEYS */;
-/*!40000 ALTER TABLE `display_picture` ENABLE KEYS */;
-UNLOCK TABLES;
+DROP TABLE IF EXISTS `display_picture`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `display_picture` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `creation_date` datetime NOT NULL,
+  `active` char(1) NOT NULL,
+  `public_id` varchar(45) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  KEY `user_id_idx` (`user_id`),
+  CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `user_log` (`iduser_log`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `token_gen`
+-- Table structure for table `token_gen`
 --
 
-LOCK TABLES `token_gen` WRITE;
-/*!40000 ALTER TABLE `token_gen` DISABLE KEYS */;
-/*!40000 ALTER TABLE `token_gen` ENABLE KEYS */;
-UNLOCK TABLES;
+DROP TABLE IF EXISTS `token_gen`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `token_gen` (
+  `idtoken` int(11) NOT NULL AUTO_INCREMENT,
+  `expiry_time` datetime NOT NULL,
+  `token_type` varchar(45) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `token_string` varchar(64) DEFAULT NULL,
+  PRIMARY KEY (`idtoken`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `user_log`
+-- Table structure for table `user_log`
 --
 
-LOCK TABLES `user_log` WRITE;
-/*!40000 ALTER TABLE `user_log` DISABLE KEYS */;
-INSERT INTO `user_log` VALUES (18,'Nouman Arshad','noumanarshadaa0320@gmail.com','M','2018-08-08 17:03:46','123456','F','F',NULL,NULL,NULL),(19,'Nouman Arshad','coadoascaaa0320@gmail.com','M','2018-08-08 17:07:15','123456','F','F',NULL,NULL,NULL),(20,'Nouman Arshad','coolboy@gmail.com','M','2018-08-08 17:10:39','12345678','F','F',NULL,NULL,NULL),(21,'Nouman Arshad','test@test.com','M','2018-08-09 08:31:25','Password420','F','F',NULL,NULL,NULL),(22,'Nouman Arshad','test2@test.com','M','2018-08-09 09:03:49','Password420','F','F',NULL,NULL,NULL),(23,'Nouman Arshad','test4@test.com','M','2018-08-10 13:02:35','Password420','F','F',NULL,NULL,NULL),(24,'Nouman Arshad','noumanarshad03asd20@gmail.com','male','2018-08-10 13:31:58','Password420','F','F',NULL,NULL,NULL),(25,'Nouman Arshad','noumanarshad03asd20a@gmail.com','M','2018-08-10 13:40:42','Password420','F','F',NULL,NULL,NULL),(26,'Nouman Arshad','noumanarshad03asd20aa@gmail.com','F','2018-08-10 13:41:15','Password420','F','F',NULL,NULL,NULL),(27,'Nouman Arshad','noumanarshad0320@gmail.com','M','2018-08-13 10:30:11','123456','F','F',NULL,NULL,NULL),(28,'nasdasd','noumanarshada0320@gmail.com','M','2018-08-13 12:09:23','asdasdasd','F','F',NULL,NULL,NULL),(29,'nasdasd','noumanarshad03a20@gmail.com','M','2018-08-13 12:11:02','jubuhuh','F','F',NULL,NULL,NULL),(30,'Nouman Arshad','mshahnawaz.nuces@gmail.com','M','2018-08-13 12:25:26','asdasdas','F','F',NULL,NULL,NULL);
-/*!40000 ALTER TABLE `user_log` ENABLE KEYS */;
-UNLOCK TABLES;
+DROP TABLE IF EXISTS `user_log`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `user_log` (
+  `iduser_log` int(11) NOT NULL AUTO_INCREMENT,
+  `user_fullname` varchar(45) NOT NULL,
+  `user_emaill` varchar(45) NOT NULL,
+  `user_sex` varchar(45) NOT NULL,
+  `user_reg` datetime NOT NULL,
+  `user_password` varchar(45) NOT NULL,
+  `Activated` char(1) DEFAULT 'F',
+  `Disabled` char(1) DEFAULT 'F',
+  `city` varchar(45) DEFAULT NULL,
+  `country` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`iduser_log`),
+  UNIQUE KEY `user_emaill_UNIQUE` (`user_emaill`)
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -62,4 +103,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-08-14 19:03:41
+-- Dump completed on 2018-08-14 22:34:31

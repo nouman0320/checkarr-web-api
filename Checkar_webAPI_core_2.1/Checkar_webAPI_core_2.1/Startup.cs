@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using Checkar_webAPI_core.Data;
 using Checkar_webAPI_core.Helpers;
 using Checkar_webAPI_core.Model;
@@ -48,8 +49,11 @@ namespace Checkar_webAPI_core._1
 
             }); // So that cross orgin domains can access this API
 
+            services.AddAutoMapper();
+
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IAccountRepository, AccountRepository>();
+            services.AddScoped<IPhotoRepository, PhotoRepository>();
 
             services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
 
