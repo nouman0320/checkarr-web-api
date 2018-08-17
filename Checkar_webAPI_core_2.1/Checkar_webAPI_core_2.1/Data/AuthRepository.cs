@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Checkar_webAPI_core.Model;
 using Microsoft.EntityFrameworkCore;
@@ -19,16 +20,19 @@ namespace Checkar_webAPI_core.Data
         public async Task<UserLog> Login(string Email, string Password)
         {
             UserLog User = await _context.UserLog.FirstOrDefaultAsync(i => i.UserEmaill == Email);
+            byte[] passHash, passSalt;
+            passHash = Encoding.ASCII.GetBytes(User.PasswordHash);
+            passSalt = Encoding.ASCII.GetBytes(User.PasswordSalt);
             if (User == null)
                 return null;
-            if (!VerifyPasswordHash(Password, User.password_hash, User.password_salt))
+           if (!VerifyPasswordHash(Password, passHash, passSalt))
                 return null;
-            if (Password != User.UserPassword)
-                return null;
+           // if (Password != User.UserPassword)
+             //   return null;
             return User;
         }
 
-        private bool VerifyPasswordHash(string password, out byte[] PasswordHash, out byte[] PasswordSalt)
+        private bool VerifyPasswordHash(string password, byte[] PasswordHash,  byte[] PasswordSalt)
         {
             using (var hmac = new System.Security.Cryptography.HMACSHA512(PasswordSalt))
             {
@@ -36,6 +40,10 @@ namespace Checkar_webAPI_core.Data
                 var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
                 for(int i=0; i< computedHash.Length;i++)
                 {
+                   // Console.WriteLine(computedHash[i]);
+                    //Console.WriteLine("  ");
+                    //Console.WriteLine(PasswordHash[i]);
+
                     if (computedHash[i] != PasswordHash[i])
                         return false;
                 }
@@ -52,16 +60,19 @@ namespace Checkar_webAPI_core.Data
             User.Activated = "F";
             User.Disabled = "F";
             User.UserReg = DateTime.UtcNow;
-            User.password_hash = PasswordHash;
-            User.password_salt = PasswordSalt;
+            //User.password_hash = PasswordHash;
+            //User.password_salt = PasswordSalt;
             User.UserSex = User.UserSex.ToLower();
             if (User.UserSex == "male") User.UserSex = "M";
             else if (User.UserSex == "female") User.UserSex = "F";
             else User.UserSex = "M";
 
             // we have to hash and salt the password using method
-            User.UserPassword = Password;
+            //User.UserPassword = Password;
             //
+            User.PasswordHash = Encoding.ASCII.GetString(PasswordHash);
+            User.PasswordSalt = Encoding.ASCII.GetString(PasswordSalt);
+            
 
             await _context.UserLog.AddAsync(User);
             await _context.SaveChangesAsync();

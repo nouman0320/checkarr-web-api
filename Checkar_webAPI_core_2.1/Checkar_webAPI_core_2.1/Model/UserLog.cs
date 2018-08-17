@@ -15,11 +15,12 @@ namespace Checkar_webAPI_core.Model
         public string UserEmaill { get; set; }
         public string UserSex { get; set; }
         public DateTime UserReg { get; set; }
-        public string UserPassword { get; set; }
         public string Activated { get; set; }
         public string Disabled { get; set; }
         public string City { get; set; }
         public string Country { get; set; }
+        public string PasswordHash { get; set; }
+        public string PasswordSalt { get; set; }
 
         public ICollection<DisplayPicture> DisplayPicture { get; set; }
     }

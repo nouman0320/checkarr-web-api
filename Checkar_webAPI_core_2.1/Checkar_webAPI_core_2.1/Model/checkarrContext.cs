@@ -25,7 +25,7 @@ namespace Checkar_webAPI_core.Model
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseMySql("Server=localhost;User Id=root;Password=Password420;Database=checkarr");
+                optionsBuilder.UseMySql("Server=localhost;User Id=root;Password=12government$;Database=checkarr");
             }
         }
 
@@ -91,6 +91,11 @@ namespace Checkar_webAPI_core.Model
                     .IsRequired()
                     .HasColumnName("public_id")
                     .HasColumnType("varchar(45)");
+
+                entity.Property(e => e.Url)
+                    .IsRequired()
+                    .HasColumnName("url")
+                    .HasColumnType("varchar(500)");
 
                 entity.Property(e => e.UserId)
                     .HasColumnName("user_id")
@@ -160,6 +165,14 @@ namespace Checkar_webAPI_core.Model
                     .HasColumnType("char(1)")
                     .HasDefaultValueSql("'F'");
 
+                entity.Property(e => e.PasswordHash)
+                    .HasColumnName("password_hash")
+                    .HasColumnType("varchar(128)");
+
+                entity.Property(e => e.PasswordSalt)
+                    .HasColumnName("password_salt")
+                    .HasColumnType("varchar(128)");
+
                 entity.Property(e => e.UserEmaill)
                     .IsRequired()
                     .HasColumnName("user_emaill")
@@ -168,11 +181,6 @@ namespace Checkar_webAPI_core.Model
                 entity.Property(e => e.UserFullname)
                     .IsRequired()
                     .HasColumnName("user_fullname")
-                    .HasColumnType("varchar(45)");
-
-                entity.Property(e => e.UserPassword)
-                    .IsRequired()
-                    .HasColumnName("user_password")
                     .HasColumnType("varchar(45)");
 
                 entity.Property(e => e.UserReg)
