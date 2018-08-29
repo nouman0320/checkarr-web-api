@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.11, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.12, for Win64 (x86_64)
 --
 -- Host: localhost    Database: checkarr
 -- ------------------------------------------------------
--- Server version	8.0.11
+-- Server version	8.0.12
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -31,17 +31,8 @@ CREATE TABLE `confirmationcode` (
   `ExpiryTime` datetime DEFAULT NULL,
   `c_id` int(11) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`c_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=103 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=105 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `confirmationcode`
---
-
-LOCK TABLES `confirmationcode` WRITE;
-/*!40000 ALTER TABLE `confirmationcode` DISABLE KEYS */;
-/*!40000 ALTER TABLE `confirmationcode` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `display_picture`
@@ -65,15 +56,6 @@ CREATE TABLE `display_picture` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `display_picture`
---
-
-LOCK TABLES `display_picture` WRITE;
-/*!40000 ALTER TABLE `display_picture` DISABLE KEYS */;
-/*!40000 ALTER TABLE `display_picture` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `token_gen`
 --
 
@@ -89,15 +71,6 @@ CREATE TABLE `token_gen` (
   PRIMARY KEY (`idtoken`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `token_gen`
---
-
-LOCK TABLES `token_gen` WRITE;
-/*!40000 ALTER TABLE `token_gen` DISABLE KEYS */;
-/*!40000 ALTER TABLE `token_gen` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `user_log`
@@ -116,22 +89,12 @@ CREATE TABLE `user_log` (
   `Disabled` char(1) DEFAULT 'F',
   `city` varchar(45) DEFAULT NULL,
   `country` varchar(45) DEFAULT NULL,
-  `password_hash` varchar(128) DEFAULT NULL,
-  `password_salt` varchar(128) DEFAULT NULL,
+  `password_hash` varbinary(248) DEFAULT NULL,
+  `password_salt` varbinary(248) DEFAULT NULL,
   PRIMARY KEY (`iduser_log`),
   UNIQUE KEY `user_emaill_UNIQUE` (`user_emaill`)
-) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `user_log`
---
-
-LOCK TABLES `user_log` WRITE;
-/*!40000 ALTER TABLE `user_log` DISABLE KEYS */;
-INSERT INTO `user_log` VALUES (33,'Muhammad Shahnawaz','mshahnawaz.nuces@gmail.com','M','2018-08-16 17:13:53','F','F',NULL,NULL,NULL,NULL),(34,'Muhammad Ahmed','ahmed.nuces@gmail.com','M','2018-08-16 17:40:58','F','F',NULL,NULL,'??/w^\'??U?.$L??]?gQ????\r?J?~?#?3??3-??????????e\"s<?5?b??(','?????\Z?BW??mjV7z??Sr???	????????\\??a??}???i????~??;???&fsq?\n?F?????????Ed??0?????D??$ niG?????`?Kaa?;@.2^??W?(?u??W?U'),(35,'Muhammad shaf','shaf.nuces@gmail.com','M','2018-08-16 18:36:26','F','F',NULL,NULL,'%?J???2??a??????(}#?z??r???l???Td?\\???6?z???	|????/?Y?????\Z??','?p}????H?AvZ?f??}t???J??i??????F?[?Z????? ?????R????S??????m????mU??BkF_c0?;???kj??\\^*c??\0????9???R?^0?Q\03?tz??');
-/*!40000 ALTER TABLE `user_log` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -142,4 +105,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-08-17 16:34:30
+-- Dump completed on 2018-08-29 13:08:13

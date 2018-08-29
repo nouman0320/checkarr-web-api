@@ -25,7 +25,7 @@ namespace Checkar_webAPI_core.Model
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseMySql("Server=localhost;User Id=root;Password=12government$;Database=checkarr");
+                optionsBuilder.UseMySql("Server=localhost;User Id=root;Password=Password420;Database=checkarr");
             }
         }
 
@@ -167,11 +167,11 @@ namespace Checkar_webAPI_core.Model
 
                 entity.Property(e => e.PasswordHash)
                     .HasColumnName("password_hash")
-                    .HasColumnType("varchar(128)");
+                    .HasMaxLength(248);
 
                 entity.Property(e => e.PasswordSalt)
                     .HasColumnName("password_salt")
-                    .HasColumnType("varchar(128)");
+                    .HasMaxLength(248);
 
                 entity.Property(e => e.UserEmaill)
                     .IsRequired()

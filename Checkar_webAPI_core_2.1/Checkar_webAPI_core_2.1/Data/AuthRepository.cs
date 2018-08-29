@@ -21,12 +21,22 @@ namespace Checkar_webAPI_core.Data
         {
             UserLog User = await _context.UserLog.FirstOrDefaultAsync(i => i.UserEmaill == Email);
             byte[] passHash, passSalt;
-            passHash = Encoding.ASCII.GetBytes(User.PasswordHash);
-            passSalt = Encoding.ASCII.GetBytes(User.PasswordSalt);
+            // Console.WriteLine(User.PasswordHash);
+            // Console.WriteLine(User.PasswordSalt);
+            passHash = User.PasswordHash;
+            passSalt = User.PasswordSalt;
             if (User == null)
-                return null;
+            {
+                // Console.WriteLine(User.UserFullname);
+                return null; }
+              
            if (!VerifyPasswordHash(Password, passHash, passSalt))
+            {
+                // Console.WriteLine("Password Not correct!");
                 return null;
+
+            }
+              
            // if (Password != User.UserPassword)
              //   return null;
             return User;
@@ -38,17 +48,21 @@ namespace Checkar_webAPI_core.Data
             {
                 
                 var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+                // Console.WriteLine(computedHash);
+                // Console.WriteLine(PasswordHash);
                 for(int i=0; i< computedHash.Length;i++)
                 {
-                   // Console.WriteLine(computedHash[i]);
-                    //Console.WriteLine("  ");
-                    //Console.WriteLine(PasswordHash[i]);
+                    // Console.WriteLine(computedHash[i]);
+                    // Console.WriteLine("  ");
+                    // Console.WriteLine(PasswordHash[i]);
+                    // Console.WriteLine(computedHash.ElementAt(i));
+                    // Console.WriteLine(PasswordHash.ElementAt(i));
 
-                    if (computedHash[i] != PasswordHash[i])
+                    if (computedHash.ElementAt(i) != PasswordHash.ElementAt(i))
                         return false;
                 }
                 
-        }
+            }
             return true;
         }
         public async Task<UserLog> Register(UserLog User, string Password)
@@ -70,10 +84,10 @@ namespace Checkar_webAPI_core.Data
             // we have to hash and salt the password using method
             //User.UserPassword = Password;
             //
-            User.PasswordHash = Encoding.ASCII.GetString(PasswordHash);
-            User.PasswordSalt = Encoding.ASCII.GetString(PasswordSalt);
-            
-
+            User.PasswordHash = PasswordHash;
+            User.PasswordSalt = PasswordSalt;
+            // Console.WriteLine(User.PasswordHash);
+            // Console.WriteLine(User.PasswordSalt);
             await _context.UserLog.AddAsync(User);
             await _context.SaveChangesAsync();
             return User;
