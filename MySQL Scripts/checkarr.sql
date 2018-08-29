@@ -74,6 +74,136 @@ LOCK TABLES `display_picture` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `fan`
+--
+
+DROP TABLE IF EXISTS `fan`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `fan` (
+  `idFan` int(11) NOT NULL AUTO_INCREMENT,
+  `userID` int(11) NOT NULL,
+  `TimeAdded` datetime DEFAULT NULL,
+  PRIMARY KEY (`idFan`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `fan`
+--
+
+LOCK TABLES `fan` WRITE;
+/*!40000 ALTER TABLE `fan` DISABLE KEYS */;
+/*!40000 ALTER TABLE `fan` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `fashion`
+--
+
+DROP TABLE IF EXISTS `fashion`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `fashion` (
+  `idFashion` int(11) NOT NULL AUTO_INCREMENT,
+  `Type` varchar(45) DEFAULT NULL,
+  `Price` double DEFAULT NULL,
+  `Name` varchar(45) DEFAULT NULL,
+  `Year` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`idFashion`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `fashion`
+--
+
+LOCK TABLES `fashion` WRITE;
+/*!40000 ALTER TABLE `fashion` DISABLE KEYS */;
+/*!40000 ALTER TABLE `fashion` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `movie`
+--
+
+DROP TABLE IF EXISTS `movie`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `movie` (
+  `idMovie` int(11) NOT NULL AUTO_INCREMENT,
+  `Rating` float DEFAULT NULL,
+  `Ups` int(11) DEFAULT NULL,
+  `ReleaseDate` datetime DEFAULT NULL,
+  `Genre` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`idMovie`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `movie`
+--
+
+LOCK TABLES `movie` WRITE;
+/*!40000 ALTER TABLE `movie` DISABLE KEYS */;
+/*!40000 ALTER TABLE `movie` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `post`
+--
+
+DROP TABLE IF EXISTS `post`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `post` (
+  `POSTID` int(11) NOT NULL AUTO_INCREMENT,
+  `UserID` int(11) NOT NULL,
+  `UpVote` int(11) DEFAULT NULL,
+  `Type` varchar(45) DEFAULT NULL,
+  `FKType` int(11) DEFAULT NULL,
+  `Date` datetime DEFAULT NULL,
+  `Views` int(11) DEFAULT NULL,
+  `Sugcount` int(11) DEFAULT NULL,
+  PRIMARY KEY (`POSTID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `post`
+--
+
+LOCK TABLES `post` WRITE;
+/*!40000 ALTER TABLE `post` DISABLE KEYS */;
+/*!40000 ALTER TABLE `post` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `song`
+--
+
+DROP TABLE IF EXISTS `song`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `song` (
+  `idSong` int(11) NOT NULL AUTO_INCREMENT,
+  `SongName` varchar(45) NOT NULL,
+  `SongAdded` datetime DEFAULT NULL,
+  `Genre` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`idSong`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `song`
+--
+
+LOCK TABLES `song` WRITE;
+/*!40000 ALTER TABLE `song` DISABLE KEYS */;
+/*!40000 ALTER TABLE `song` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `token_gen`
 --
 
@@ -116,8 +246,8 @@ CREATE TABLE `user_log` (
   `Disabled` char(1) DEFAULT 'F',
   `city` varchar(45) DEFAULT NULL,
   `country` varchar(45) DEFAULT NULL,
-  `password_hash` varchar(128) DEFAULT NULL,
-  `password_salt` varchar(128) DEFAULT NULL,
+  `password_hash` varbinary(248) DEFAULT NULL,
+  `password_salt` varbinary(248) DEFAULT NULL,
   PRIMARY KEY (`iduser_log`),
   UNIQUE KEY `user_emaill_UNIQUE` (`user_emaill`)
 ) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -142,4 +272,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-08-17 16:34:30
+-- Dump completed on 2018-08-29 15:37:05

@@ -21,14 +21,21 @@ namespace Checkar_webAPI_core.Data
         {
             UserLog User = await _context.UserLog.FirstOrDefaultAsync(i => i.UserEmaill == Email);
             byte[] passHash, passSalt;
+
             passHash = Encoding.ASCII.GetBytes(User.PasswordHash);
             passSalt = Encoding.ASCII.GetBytes(User.PasswordSalt);
             if (User == null)
+            {
+                Console.WriteLine(User.UserFullname);
                 return null;
-           if (!VerifyPasswordHash(Password, passHash, passSalt))
+            }
+            else if (!VerifyPasswordHash(Password, passHash, passSalt))
+            {
+                Console.WriteLine("Password not correct!");
                 return null;
-           // if (Password != User.UserPassword)
-             //   return null;
+            }
+            // if (Password != User.UserPassword)
+            //   return null;
             return User;
         }
 
