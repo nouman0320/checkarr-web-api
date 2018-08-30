@@ -30,7 +30,7 @@ namespace Checkar_webAPI_core.Controllers
         }
 
         [HttpPost("activation")]
-        public async Task<IActionResult> ActivateUserAccount(userForActivationDto _userForActivationDto)
+        public async Task<IActionResult> activateUserAccount(userForActivationDto _userForActivationDto)
         {
             UserLog User = await _accountRepo.GetUserFromUserID(_userForActivationDto.USER_ID);
 
