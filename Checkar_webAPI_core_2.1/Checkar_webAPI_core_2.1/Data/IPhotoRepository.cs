@@ -8,6 +8,8 @@ namespace Checkar_webAPI_core.Data
 {
     public interface IPhotoRepository
     {
+
         Task<DisplayPicture> GetDisplayPictureFromUserID(int user_id);
+        Task<DisplayPicture> GetPhoto(int id);
     }
 }
