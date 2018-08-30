@@ -92,6 +92,11 @@ namespace Checkar_webAPI_core.Model
                     .HasColumnName("public_id")
                     .HasColumnType("varchar(45)");
 
+                entity.Property(e => e.Url)
+                    .IsRequired()
+                    .HasColumnName("url")
+                    .HasColumnType("varchar(500)");
+
                 entity.Property(e => e.UserId)
                     .HasColumnName("user_id")
                     .HasColumnType("int(11)");
@@ -160,6 +165,14 @@ namespace Checkar_webAPI_core.Model
                     .HasColumnType("char(1)")
                     .HasDefaultValueSql("'F'");
 
+                entity.Property(e => e.PasswordHash)
+                    .HasColumnName("password_hash")
+                    .HasMaxLength(248);
+
+                entity.Property(e => e.PasswordSalt)
+                    .HasColumnName("password_salt")
+                    .HasMaxLength(248);
+
                 entity.Property(e => e.UserEmaill)
                     .IsRequired()
                     .HasColumnName("user_emaill")
@@ -168,11 +181,6 @@ namespace Checkar_webAPI_core.Model
                 entity.Property(e => e.UserFullname)
                     .IsRequired()
                     .HasColumnName("user_fullname")
-                    .HasColumnType("varchar(45)");
-
-                entity.Property(e => e.UserPassword)
-                    .IsRequired()
-                    .HasColumnName("user_password")
                     .HasColumnType("varchar(45)");
 
                 entity.Property(e => e.UserReg)

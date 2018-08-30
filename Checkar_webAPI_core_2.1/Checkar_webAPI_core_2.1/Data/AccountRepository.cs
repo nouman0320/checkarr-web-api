@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Checkar_webAPI_core.Model;
 using Microsoft.EntityFrameworkCore;
@@ -22,14 +23,32 @@ namespace Checkar_webAPI_core.Data
             return true;
         }
 
-
-        public async Task<bool> isPasswordMatched(UserLog user, string password)
+        private bool VerifyPasswordHash(string password, byte[] PasswordHash, byte[] PasswordSalt)
         {
-            if(user.UserPassword == password)
+            using (var hmac = new System.Security.Cryptography.HMACSHA512(PasswordSalt))
             {
-                return true;
+
+                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+                for (int i = 0; i < computedHash.Length; i++)
+                {
+                    // Console.WriteLine(computedHash[i]);
+                    // Console.WriteLine(PasswordHash[i]);
+                    if (computedHash[i] != PasswordHash[i])
+                        return false;
+                }
+
             }
-            return false;
+            return true;
+        }
+
+        public bool isPasswordMatched(UserLog user, string password)
+        {
+            byte[] passHash, passSalt;
+            passHash = user.PasswordHash;
+            passSalt = user.PasswordSalt;
+            if (!VerifyPasswordHash(password, passHash, passSalt))
+                return false;
+            return true;
         }
 
         public Task<bool> ActivateAccount(string code, string token, string user_id)
@@ -39,13 +58,23 @@ namespace Checkar_webAPI_core.Data
 
         public async Task<bool> ChangePasswordViaReset(UserLog user, string password)
         {
-            user.UserPassword = password;
-            //await _context.AddAsync(user);
+            byte[] PasswordHash, PasswordSalt;
+            CreatePasswordHash(password, out PasswordHash, out PasswordSalt);
+
+            user.PasswordHash = PasswordHash;
+            user.PasswordSalt = PasswordSalt;            //await _context.AddAsync(user);
             await _context.SaveChangesAsync();
 
             return true;
         }
-
+        private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
+        {
+            using (var hmac = new System.Security.Cryptography.HMACSHA512())
+            {
+                passwordSalt = hmac.Key;
+                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+            }
+        }
         public async Task<Confirmationcode> GetActivationCode(string code, int userID)
         {
             Confirmationcode confirmationCode = await _context.Confirmationcode.FirstOrDefaultAsync(i => i.UserId == userID && i.ConfirmationCode1 == code && i.ConfirmationType == "ACTIVATION_CODE");

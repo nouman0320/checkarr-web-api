@@ -15,7 +15,7 @@ namespace Checkar_webAPI_core.Data
         void StoreCode(Confirmationcode confirmationcode);
         Task<UserLog> GetUserFromEmail(string email);
         Task<UserLog> GetUserFromUserID(int id);
-        Task<Boolean> isPasswordMatched(UserLog User, string password);
+        Boolean isPasswordMatched(UserLog User, string password);
         Task<Boolean> StoreActivationCode(Confirmationcode confirmationcode);
         Boolean RemoveConfirmationCode(Confirmationcode confirmationcode);
         Task<Boolean> SaveUserDetails();
