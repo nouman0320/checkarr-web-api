@@ -11,5 +11,6 @@ namespace Checkar_webAPI_core.Data
 
         Task<DisplayPicture> GetDisplayPictureFromUserID(int user_id);
         Task<DisplayPicture> GetPhoto(int id);
+        Task<Boolean> SaveAll();
     }
 }

@@ -1,7 +1,15 @@
-﻿using Checkar_webAPI_core.Classes;
+﻿using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Threading.Tasks;
+using Checkar_webAPI_core.Classes;
 using Checkar_webAPI_core.Data;
 using Checkar_webAPI_core.Dtos;
 using Checkar_webAPI_core.Model;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace Checkar_webAPI_core.Controllers
 {

@@ -16,15 +16,22 @@ namespace Checkar_webAPI_core.Data
             _context = context;
         }
 
-        public Task<DisplayPicture> GetDisplayPictureFromUserID(int user_id)
+        public async Task<DisplayPicture> GetDisplayPictureFromUserID(int user_id)
         {
-            throw new NotImplementedException();
+            var currentPhoto = await _context.DisplayPicture.FirstOrDefaultAsync(i => i.UserId == user_id && i.Active == "T");
+            return currentPhoto;
         }
 
         public async Task<DisplayPicture> GetPhoto(int id)
         {
             var photo = await _context.DisplayPicture.FirstOrDefaultAsync(p => p.Id == id);
             return photo;
+        }
+
+        public async Task<bool> SaveAll()
+        {
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }
