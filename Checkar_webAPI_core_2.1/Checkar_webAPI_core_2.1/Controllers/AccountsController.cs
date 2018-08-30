@@ -134,7 +134,7 @@ namespace Checkar_webAPI_core.Controllers
                 return BadRequest("reset email is not valid");
             }
 
-            bool isPasswordMatched = await _accountRepo.isPasswordMatched(User, _newAccountPasswordDto.NEW_PASSWORD);
+            bool isPasswordMatched =  _accountRepo.isPasswordMatched(User, _newAccountPasswordDto.NEW_PASSWORD);
             if(isPasswordMatched)
             {
                 return BadRequest("old and new password can't be same");

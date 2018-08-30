@@ -36,7 +36,7 @@ namespace Checkar_webAPI_core._1
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<checkarrContext>(x => x.UseMySql(Configuration.GetConnectionString("ShahnawazConnection")));
+            services.AddDbContext<checkarrContext>(x => x.UseMySql(Configuration.GetConnectionString("NoumanConnection")));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddCors(options =>
             {
@@ -54,6 +54,7 @@ namespace Checkar_webAPI_core._1
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IPhotoRepository, PhotoRepository>();
+            services.AddScoped<IFanRepository, FanRepository>();
 
             services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
 

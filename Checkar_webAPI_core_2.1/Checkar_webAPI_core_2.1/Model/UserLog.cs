@@ -19,8 +19,8 @@ namespace Checkar_webAPI_core.Model
         public string Disabled { get; set; }
         public string City { get; set; }
         public string Country { get; set; }
-        public string PasswordHash { get; set; }
-        public string PasswordSalt { get; set; }
+        public byte[] PasswordHash { get; set; }
+        public byte[] PasswordSalt { get; set; }
 
         public ICollection<DisplayPicture> DisplayPicture { get; set; }
     }

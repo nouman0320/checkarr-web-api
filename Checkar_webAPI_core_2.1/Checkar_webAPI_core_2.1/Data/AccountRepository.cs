@@ -31,6 +31,8 @@ namespace Checkar_webAPI_core.Data
                 var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
                 for (int i = 0; i < computedHash.Length; i++)
                 {
+                    // Console.WriteLine(computedHash[i]);
+                    // Console.WriteLine(PasswordHash[i]);
                     if (computedHash[i] != PasswordHash[i])
                         return false;
                 }
@@ -39,17 +41,14 @@ namespace Checkar_webAPI_core.Data
             return true;
         }
 
-        public async Task<bool> isPasswordMatched(UserLog user, string password)
+        public bool isPasswordMatched(UserLog user, string password)
         {
             byte[] passHash, passSalt;
-            passHash = Encoding.ASCII.GetBytes(user.PasswordHash);
-            passSalt = Encoding.ASCII.GetBytes(user.PasswordSalt);
+            passHash = user.PasswordHash;
+            passSalt = user.PasswordSalt;
             if (!VerifyPasswordHash(password, passHash, passSalt))
                 return false;
-            {
-                return true;
-            }
-            return false;
+            return true;
         }
 
         public Task<bool> ActivateAccount(string code, string token, string user_id)
@@ -62,9 +61,8 @@ namespace Checkar_webAPI_core.Data
             byte[] PasswordHash, PasswordSalt;
             CreatePasswordHash(password, out PasswordHash, out PasswordSalt);
 
-            user.PasswordHash = Encoding.ASCII.GetString(PasswordHash);
-            user.PasswordSalt = Encoding.ASCII.GetString(PasswordSalt);
-            //await _context.AddAsync(user);
+            user.PasswordHash = PasswordHash;
+            user.PasswordSalt = PasswordSalt;            //await _context.AddAsync(user);
             await _context.SaveChangesAsync();
 
             return true;
