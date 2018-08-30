@@ -92,8 +92,20 @@ namespace Checkar_webAPI_core.Controllers
             _dpForUploadDto.PublicId = uploadResult.PublicId;
 
             var photo = _mapper.Map<DisplayPicture>(_dpForUploadDto);
-            photo.Active = "F";
+            photo.Active = "T";
 
+
+            var currentPhoto = await _photoRepo.GetDisplayPictureFromUserID(userID);
+
+            if (currentPhoto != null)
+            {
+                currentPhoto.Active = "F";
+
+                if (!await _photoRepo.SaveAll())
+                {
+                    return BadRequest("Something went wrong");
+                }
+            }
             // check here -> deactive other photos and active main photo
 
             userFromRepo.DisplayPicture.Add(photo);
