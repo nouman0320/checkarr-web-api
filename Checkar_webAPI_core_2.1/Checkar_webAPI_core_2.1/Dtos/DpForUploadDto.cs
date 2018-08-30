@@ -10,7 +10,6 @@ namespace Checkar_webAPI_core.Dtos
     public class DpForUploadDto
     {
         public string Url { get; set; }
-        [Required(ErrorMessage = "Photo is requied to upload")]
         public IFormFile File { get; set; }
         public DateTime CreationDate { get; set; }
         public string PublicId { get; set; }

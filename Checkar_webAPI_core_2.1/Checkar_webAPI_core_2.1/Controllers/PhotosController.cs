@@ -80,7 +80,7 @@ namespace Checkar_webAPI_core.Controllers
                     var uploadParams = new ImageUploadParams()
                     {
                         File = new FileDescription(file.Name, stream),
-                        Transformation = new Transformation().Width(500).Height(500)
+                        Transformation = new Transformation().Width(200).Height(200)
                     };
 
 

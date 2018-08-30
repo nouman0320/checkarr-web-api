@@ -21,12 +21,14 @@ namespace Checkar_webAPI_core.Controllers
     {
         private readonly IAuthRepository _repo;
         private readonly IConfiguration _config;
+        private readonly IPhotoRepository _photoRepo;
         private readonly IAccountRepository _accountRepo;
 
-        public AuthController(IAuthRepository repo, IConfiguration config, IAccountRepository accountRepo)
+        public AuthController(IAuthRepository repo, IConfiguration config, IPhotoRepository photoRepo, IAccountRepository accountRepo)
         {
             _repo = repo;
             _config = config;
+            _photoRepo = photoRepo;
             _accountRepo = accountRepo;
         }
 
@@ -104,14 +106,26 @@ namespace Checkar_webAPI_core.Controllers
             int user_id_ = User.IduserLog;
             
 
+
             string user_email_ = User.UserEmaill;
+
+
+            var currentDp = await _photoRepo.GetDisplayPictureFromUserID(User.IduserLog);
+
+            string dp_url_ = "";
+
+            if (currentDp != null)
+            {
+                dp_url_ = currentDp.Url;
+            }
 
 
             return Ok(new {
                 access_validation = isAccessTokenValid,
                 account_activated = isAccountActivated,
                 user_id = user_id_,
-                user_email = user_email_
+                user_email = user_email_,
+                dp_url = dp_url_
             });
 
         }
@@ -156,6 +170,14 @@ namespace Checkar_webAPI_core.Controllers
             var AccessToken = new Token(_config.GetSection("AppSettings:SecretKey").Value).GenerateToken(userFromRepo.IduserLog);
             var RefreshToken = new Token(_config.GetSection("AppSettings:SecretKey").Value).GenerateRefreshToken(userFromRepo.IduserLog);
 
+            var currentDp = await _photoRepo.GetDisplayPictureFromUserID(userFromRepo.IduserLog);
+
+            string dp_url_ = "";
+
+            if(currentDp != null)
+            {
+                dp_url_ = currentDp.Url;
+            }
 
             return Ok(new
             {
@@ -164,7 +186,8 @@ namespace Checkar_webAPI_core.Controllers
                 refresh_token = new JwtSecurityTokenHandler().WriteToken(RefreshToken),
                 activation_status = userFromRepo.Activated,
                 user_id = userFromRepo.IduserLog,
-                user_email = userFromRepo.UserEmaill
+                user_email = userFromRepo.UserEmaill,
+                dp_url = dp_url_
             });
 
         }
