@@ -1,7 +1,15 @@
-﻿using Checkar_webAPI_core.Classes;
+﻿using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Threading.Tasks;
+using Checkar_webAPI_core.Classes;
 using Checkar_webAPI_core.Data;
 using Checkar_webAPI_core.Dtos;
 using Checkar_webAPI_core.Model;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace Checkar_webAPI_core.Controllers
 {
@@ -22,7 +30,7 @@ namespace Checkar_webAPI_core.Controllers
         }
 
         [HttpPost("activation")]
-        public async Task<IActionResult> activateUserAccount(userForActivationDto _userForActivationDto)
+        public async Task<IActionResult> ActivateUserAccount(userForActivationDto _userForActivationDto)
         {
             UserLog User = await _accountRepo.GetUserFromUserID(_userForActivationDto.USER_ID);
 
