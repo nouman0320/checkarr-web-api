@@ -42,7 +42,7 @@ namespace Checkar_webAPI_core.Controllers
         }
 
         [HttpPost("dp/add")]
-        public IActionResult AddDpForUser(int userID)
+        public async Task<IActionResult> AddDpForUser(int userID, DpForUploadDto _dpForUploadDto)
         {
             if (userID != int.Parse(User.FindFirst(JwtRegisteredClaimNames.Sid).Value))
                 return Unauthorized();
