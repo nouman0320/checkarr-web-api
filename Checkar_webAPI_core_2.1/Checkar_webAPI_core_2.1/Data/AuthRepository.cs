@@ -21,6 +21,7 @@ namespace Checkar_webAPI_core.Data
         {
             UserLog User = await _context.UserLog.FirstOrDefaultAsync(i => i.UserEmaill == Email);
             byte[] passHash, passSalt;
+
             // Console.WriteLine(User.PasswordHash);
             // Console.WriteLine(User.PasswordSalt);
             passHash = User.PasswordHash;
@@ -39,6 +40,7 @@ namespace Checkar_webAPI_core.Data
               
            // if (Password != User.UserPassword)
              //   return null;
+
             return User;
         }
 
