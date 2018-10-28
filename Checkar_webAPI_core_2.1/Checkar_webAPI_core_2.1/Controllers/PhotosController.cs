@@ -85,6 +85,7 @@ namespace Checkar_webAPI_core.Controllers
 
 
                     uploadResult = _cloudinary.Upload(uploadParams);
+                    
                 }
             }
 

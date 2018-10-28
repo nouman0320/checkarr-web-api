@@ -64,13 +64,24 @@ namespace Checkar_webAPI_core.Controllers
             string user_email_ = User.UserEmaill;
 
 
+            var currentDp = await _photoRepo.GetDisplayPictureFromUserID(User.IduserLog);
+
+            string dp_url_ = "";
+
+            if (currentDp != null)
+            {
+                dp_url_ = currentDp.Url;
+            }
+
+
             return Ok(new
             {
                 account_activated = activated,
                 user_id = user_id_,
                 user_email = user_email_,
                 new_refresh_token = new_refresh_token_,
-                new_access_token = new_access_token_
+                new_access_token = new_access_token_,
+                dp_url = dp_url_
 
             });
 
