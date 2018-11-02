@@ -31,9 +31,13 @@ namespace Checkar_webAPI_core_2._1.Controllers
             if (userID != int.Parse(User.FindFirst(JwtRegisteredClaimNames.Sid).Value))
                 return Unauthorized();
 
+            bool temp = await _fanRepo.AddFan(userID, _AddFan.FanID);
+            if (temp != true)
+            {
+                return BadRequest("There is something wrong with Addfan");
 
 
-
+            }
             return Ok();
         }
 

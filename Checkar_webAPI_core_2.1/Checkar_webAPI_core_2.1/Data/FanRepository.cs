@@ -14,9 +14,25 @@ namespace Checkar_webAPI_core.Data
             _context = context;
         }
         public async Task<bool> AddFan(int userId,int fanID)
-        {   
-               
-            throw new NotImplementedException();
+        {
+            
+            Fan temp_fan = new Fan();
+            temp_fan.TimeAdded =DateTime.UtcNow;
+            temp_fan.UserId = userId;
+            temp_fan.IdFan = fanID;
+            await _context.Fan.AddAsync(temp_fan);
+            await _context.SaveChangesAsync();
+          
+            return true;
         }
+
+        public async Task<> FindFan()
+        {
+
+        }
+
+
+
+
     }
 }
