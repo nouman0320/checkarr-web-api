@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Checkar_webAPI_core_2._1.Controllers
 {    
-    [Authorize]
+   [Authorize]
     [Route("api/[controller]/{userID}")]
     [EnableCors("AllowAnyOrigin")]
     [ApiController]
@@ -40,6 +40,21 @@ namespace Checkar_webAPI_core_2._1.Controllers
             }
             return Ok();
         }
+        [HttpGet("fan/find")]
+        public async Task<IActionResult> FindFan(int userID)
+        {
+            if (userID != int.Parse(User.FindFirst(JwtRegisteredClaimNames.Sid).Value))
+                return Unauthorized();
+
+            List<FindFanForReturnDto>  temp= await _fanRepo.FindFanReturn(userID);
+
+
+
+            return Ok(temp);
+        }
+
+
+
 
     }
 }
