@@ -8,6 +8,7 @@ namespace Checkar_webAPI_core.Model
         public UserLog()
         {
             DisplayPicture = new HashSet<DisplayPicture>();
+            Politics = new HashSet<Politics>();
         }
 
         public int IduserLog { get; set; }
@@ -23,5 +24,6 @@ namespace Checkar_webAPI_core.Model
         public byte[] PasswordSalt { get; set; }
 
         public ICollection<DisplayPicture> DisplayPicture { get; set; }
+        public ICollection<Politics> Politics { get; set; }
     }
 }

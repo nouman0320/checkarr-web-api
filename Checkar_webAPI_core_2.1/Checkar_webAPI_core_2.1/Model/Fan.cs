@@ -8,5 +8,6 @@ namespace Checkar_webAPI_core.Model
         public int IdFan { get; set; }
         public int UserId { get; set; }
         public DateTime? TimeAdded { get; set; }
+        public int FanAutoid { get; set; }
     }
 }

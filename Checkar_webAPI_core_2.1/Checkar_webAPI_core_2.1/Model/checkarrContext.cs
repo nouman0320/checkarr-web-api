@@ -20,6 +20,7 @@ namespace Checkar_webAPI_core.Model
         public virtual DbSet<Fan> Fan { get; set; }
         public virtual DbSet<Fashion> Fashion { get; set; }
         public virtual DbSet<Movie> Movie { get; set; }
+        public virtual DbSet<Politics> Politics { get; set; }
         public virtual DbSet<Post> Post { get; set; }
         public virtual DbSet<Song> Song { get; set; }
         public virtual DbSet<TokenGen> TokenGen { get; set; }
@@ -114,9 +115,13 @@ namespace Checkar_webAPI_core.Model
 
             modelBuilder.Entity<Fan>(entity =>
             {
-                entity.HasKey(e => e.IdFan);
+                entity.HasKey(e => e.FanAutoid);
 
                 entity.ToTable("fan");
+
+                entity.Property(e => e.FanAutoid)
+                    .HasColumnName("fan_autoid")
+                    .HasColumnType("int(11)");
 
                 entity.Property(e => e.IdFan)
                     .HasColumnName("idFan")
@@ -161,6 +166,43 @@ namespace Checkar_webAPI_core.Model
                 entity.Property(e => e.ReleaseDate).HasColumnType("datetime");
 
                 entity.Property(e => e.Ups).HasColumnType("int(11)");
+            });
+
+            modelBuilder.Entity<Politics>(entity =>
+            {
+                entity.HasKey(e => e.PoliticsPostId);
+
+                entity.ToTable("politics");
+
+                entity.HasIndex(e => e.UserId)
+                    .HasName("iduser_log_idx");
+
+                entity.Property(e => e.PoliticsPostId)
+                    .HasColumnName("politics_post_id")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.PictureUrl)
+                    .HasColumnName("Picture_url")
+                    .HasColumnType("varchar(100)");
+
+                entity.Property(e => e.TextMessage)
+                    .HasColumnName("Text_message")
+                    .HasColumnType("varchar(1000)");
+
+                entity.Property(e => e.Time).HasColumnType("datetime");
+
+                entity.Property(e => e.UserId)
+                    .HasColumnName("User_id")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.VideoUrl)
+                    .HasColumnName("Video_url")
+                    .HasColumnType("varchar(100)");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Politics)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("iduser_log");
             });
 
             modelBuilder.Entity<Post>(entity =>
