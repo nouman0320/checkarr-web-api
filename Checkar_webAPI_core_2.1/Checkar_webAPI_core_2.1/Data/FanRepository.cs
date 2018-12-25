@@ -40,36 +40,33 @@ namespace Checkar_webAPI_core.Data
                          
                          select new
                          {
-                             IdFan = c.IdFan,
-                             UserFullname = t.UserFullname,
-                             TimeAdded = c.TimeAdded,
-                             Url = ""
-           
+                             id_fan = c.IdFan,
+                             user_fullname = t.UserFullname,
+                             time_added = c.TimeAdded,
+                             photo_url = ""
 
-        }).ToList();
+                         }).ToList();
 
           
             List<FindFanForReturnDto> fan_list = new List<FindFanForReturnDto>();
             foreach (var element in test1)
             {
                 FindFanForReturnDto temporary = new FindFanForReturnDto();
-                DisplayPicture pic = await _context.DisplayPicture.FirstOrDefaultAsync(i => i.UserId == element.IdFan);
+                DisplayPicture pic = await _context.DisplayPicture.FirstOrDefaultAsync(i => i.UserId == element.id_fan);
                 // String temp1 = await _context.DisplayPicture.ElementAtOrDefault().ToString();
-                temporary.IduserLog = element.IdFan;
+                temporary.IduserLog = element.id_fan;
                 if (pic == null)
                     temporary.Url = "null";
                 else
                     temporary.Url = pic.Url;
-                temporary.UserFullname = element.UserFullname;
-                temporary.Time = element.TimeAdded;
+                temporary.UserFullname = element.user_fullname;
+                String temp = element.time_added.ToString();
+                DateTime tempTime = Convert.ToDateTime(temp);
+                temporary.Time = tempTime.ToString("MMMM").ToLower()+ " " + tempTime.ToString("yyyy");
 
                 fan_list.Add(temporary);
             }
             
-            foreach(FindFanForReturnDto element in fan_list)
-            {
-                Console.WriteLine(element.UserFullname);
-            }
             return fan_list;
         }
 
