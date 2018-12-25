@@ -17,6 +17,11 @@ namespace Checkar_webAPI_core.Model
 
         public virtual DbSet<Confirmationcode> Confirmationcode { get; set; }
         public virtual DbSet<DisplayPicture> DisplayPicture { get; set; }
+        public virtual DbSet<Fan> Fan { get; set; }
+        public virtual DbSet<Fashion> Fashion { get; set; }
+        public virtual DbSet<Movie> Movie { get; set; }
+        public virtual DbSet<Post> Post { get; set; }
+        public virtual DbSet<Song> Song { get; set; }
         public virtual DbSet<TokenGen> TokenGen { get; set; }
         public virtual DbSet<UserLog> UserLog { get; set; }
 
@@ -25,7 +30,7 @@ namespace Checkar_webAPI_core.Model
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseMySql("Server=localhost;User Id=root;Password=Password420;Database=checkarr");
+                optionsBuilder.UseMySql("Server=localhost;User Id=root;Password=rokra786;Database=checkarr");
             }
         }
 
@@ -105,6 +110,103 @@ namespace Checkar_webAPI_core.Model
                     .WithMany(p => p.DisplayPicture)
                     .HasForeignKey(d => d.UserId)
                     .HasConstraintName("user_id");
+            });
+
+            modelBuilder.Entity<Fan>(entity =>
+            {
+                entity.HasKey(e => e.IdFan);
+
+                entity.ToTable("fan");
+
+                entity.Property(e => e.IdFan)
+                    .HasColumnName("idFan")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.TimeAdded).HasColumnType("datetime");
+
+                entity.Property(e => e.UserId)
+                    .HasColumnName("userID")
+                    .HasColumnType("int(11)");
+            });
+
+            modelBuilder.Entity<Fashion>(entity =>
+            {
+                entity.HasKey(e => e.IdFashion);
+
+                entity.ToTable("fashion");
+
+                entity.Property(e => e.IdFashion)
+                    .HasColumnName("idFashion")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.Name).HasColumnType("varchar(45)");
+
+                entity.Property(e => e.Type).HasColumnType("varchar(45)");
+
+                entity.Property(e => e.Year).HasColumnType("varchar(45)");
+            });
+
+            modelBuilder.Entity<Movie>(entity =>
+            {
+                entity.HasKey(e => e.IdMovie);
+
+                entity.ToTable("movie");
+
+                entity.Property(e => e.IdMovie)
+                    .HasColumnName("idMovie")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.Genre).HasColumnType("varchar(45)");
+
+                entity.Property(e => e.ReleaseDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Ups).HasColumnType("int(11)");
+            });
+
+            modelBuilder.Entity<Post>(entity =>
+            {
+                entity.ToTable("post");
+
+                entity.Property(e => e.Postid)
+                    .HasColumnName("POSTID")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.Date).HasColumnType("datetime");
+
+                entity.Property(e => e.Fktype)
+                    .HasColumnName("FKType")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.Sugcount).HasColumnType("int(11)");
+
+                entity.Property(e => e.Type).HasColumnType("varchar(45)");
+
+                entity.Property(e => e.UpVote).HasColumnType("int(11)");
+
+                entity.Property(e => e.UserId)
+                    .HasColumnName("UserID")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.Views).HasColumnType("int(11)");
+            });
+
+            modelBuilder.Entity<Song>(entity =>
+            {
+                entity.HasKey(e => e.IdSong);
+
+                entity.ToTable("song");
+
+                entity.Property(e => e.IdSong)
+                    .HasColumnName("idSong")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.Genre).HasColumnType("varchar(45)");
+
+                entity.Property(e => e.SongAdded).HasColumnType("datetime");
+
+                entity.Property(e => e.SongName)
+                    .IsRequired()
+                    .HasColumnType("varchar(45)");
             });
 
             modelBuilder.Entity<TokenGen>(entity =>

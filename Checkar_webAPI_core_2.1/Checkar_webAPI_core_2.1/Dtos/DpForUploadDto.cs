@@ -11,10 +11,9 @@ namespace Checkar_webAPI_core.Dtos
     {
         public string Url { get; set; }
         public IFormFile File { get; set; }
-        public DateTime CreationDate { get; set; }
+        public DateTime? CreationDate { get; set; }
         public string PublicId { get; set; }
-
-
+        
         public DpForUploadDto()
         {
             CreationDate = DateTime.UtcNow;
