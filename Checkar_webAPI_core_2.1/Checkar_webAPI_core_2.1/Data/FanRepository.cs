@@ -20,10 +20,10 @@ namespace Checkar_webAPI_core.Data
             
             Fan temp_fan = new Fan();
             temp_fan.TimeAdded =DateTime.UtcNow;
-            temp_fan.UserId = userId;
-            temp_fan.IdFan = fanID;
+            temp_fan.UserId = fanID;
+            temp_fan.IdFan = userId;
             
-          await _context.Fan.AddAsync(temp_fan);
+         await _context.Fan.AddAsync(temp_fan);
             await _context.SaveChangesAsync();
           
             return true;

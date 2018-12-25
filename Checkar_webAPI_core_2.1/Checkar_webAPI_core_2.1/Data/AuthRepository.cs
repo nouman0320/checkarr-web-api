@@ -20,20 +20,18 @@ namespace Checkar_webAPI_core.Data
         public async Task<UserLog> Login(string Email, string Password)
         {
             UserLog User = await _context.UserLog.FirstOrDefaultAsync(i => i.UserEmaill == Email);
-        
-            if (User == null)
-            {
-                // Console.WriteLine(User.UserFullname);
-                return null; }
-
             byte[] passHash, passSalt;
 
             // Console.WriteLine(User.PasswordHash);
             // Console.WriteLine(User.PasswordSalt);
             passHash = User.PasswordHash;
             passSalt = User.PasswordSalt;
-
-            if (!VerifyPasswordHash(Password, passHash, passSalt))
+            if (User == null)
+            {
+                // Console.WriteLine(User.UserFullname);
+                return null; }
+              
+           if (!VerifyPasswordHash(Password, passHash, passSalt))
             {
                 // Console.WriteLine("Password Not correct!");
                 return null;
