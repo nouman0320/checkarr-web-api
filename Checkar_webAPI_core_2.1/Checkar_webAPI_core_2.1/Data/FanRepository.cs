@@ -67,10 +67,6 @@ namespace Checkar_webAPI_core.Data
                 fan_list.Add(temporary);
             }
             
-            foreach(FindFanForReturnDto element in fan_list)
-            {
-                Console.WriteLine(element.UserFullname);
-            }
             return fan_list;
         }
 
