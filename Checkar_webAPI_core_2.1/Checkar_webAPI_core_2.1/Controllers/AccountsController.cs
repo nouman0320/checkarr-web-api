@@ -245,5 +245,23 @@ namespace Checkar_webAPI_core.Controllers
                 recovery_token = new JwtSecurityTokenHandler().WriteToken(recoveryToken)
             });
         }
-    }
+
+
+        [HttpGet("{userID}/Profile_details")]
+        public async Task<IActionResult> Profile_details(int userId)
+        {
+
+            int current_login_Userid = int.Parse(User.FindFirst(JwtRegisteredClaimNames.Sid).Value);
+
+            UserProfileDetailsDto temp= await _accountRepo.Userprofile_details(userId,current_login_Userid);
+            if(temp.Disabled=="T")
+            {
+                return BadRequest("Acount is disabled for that user");
+
+            }
+            return Ok(temp);
+        }
+
+
+        }
 }

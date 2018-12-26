@@ -1,4 +1,5 @@
-﻿using Checkar_webAPI_core.Model;
+﻿using Checkar_webAPI_core.Dtos;
+using Checkar_webAPI_core.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,5 +20,6 @@ namespace Checkar_webAPI_core.Data
         Task<Boolean> StoreActivationCode(Confirmationcode confirmationcode);
         Boolean RemoveConfirmationCode(Confirmationcode confirmationcode);
         Task<Boolean> SaveUserDetails();
+        Task<UserProfileDetailsDto> Userprofile_details(int userId,int current_login_Userid);
     }
 }

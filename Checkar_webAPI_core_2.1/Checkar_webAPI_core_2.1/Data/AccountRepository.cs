@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Checkar_webAPI_core.Dtos;
 using Checkar_webAPI_core.Model;
 using Microsoft.EntityFrameworkCore;
 
@@ -117,5 +119,56 @@ namespace Checkar_webAPI_core.Data
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<UserProfileDetailsDto> Userprofile_details(int userId,int current_login_Userid)
+        {
+            UserProfileDetailsDto temp = new UserProfileDetailsDto();
+            UserLog User = await _context.UserLog.FirstOrDefaultAsync(i => i.IduserLog == userId);
+            if(User.Disabled=="T")
+            {
+                temp.Disabled = "T";
+                temp.Total_fans = 0;
+                temp.UserFullname = "";
+                return temp;
+            }
+            else
+            {
+                var totalFans = _context.Fan
+                     .Where(f =>
+                            f.UserId == userId).Count();
+                temp.Total_fans = totalFans;
+                temp.Disabled = User.Disabled;
+                temp.UserFullname = User.UserFullname;
+                temp.UserSex = User.UserSex;
+                temp.UserReg = User.UserReg;
+
+               Fan User_fan = await _context.Fan.FirstOrDefaultAsync(i => i.UserId == userId && i.IdFan== current_login_Userid);
+                if (User_fan == null)
+                   temp.Fan=false;
+                else
+                {
+                    temp.Fan = true;
+
+                }
+                Fan User_following = await _context.Fan.FirstOrDefaultAsync(i => i.UserId == current_login_Userid && i.IdFan ==userId);
+                if (User_fan == null)
+                    temp.Following = false;
+                else
+                {
+                    temp.Following = true;
+
+                }
+
+
+
+
+            }
+
+        
+            return temp;
     }
 }
+
+    }
+    
+
