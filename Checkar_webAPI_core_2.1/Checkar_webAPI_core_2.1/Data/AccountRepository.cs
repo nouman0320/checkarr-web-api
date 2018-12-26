@@ -145,10 +145,17 @@ namespace Checkar_webAPI_core.Data
                 String temp_date = User.UserReg.ToString();
                 DateTime tempTime = Convert.ToDateTime(temp_date);
                 temp.UserReg = tempTime.ToString("MMMM").ToLower() + " " + tempTime.ToString("yyyy");
+                DisplayPicture pic = await _context.DisplayPicture.FirstOrDefaultAsync(i => i.UserId == userId);
+                // String temp1 = await _context.DisplayPicture.ElementAtOrDefault().ToString();
+             
+                if (pic == null)
+                    temp.DisplayPicture_url = "null";
+                else
+                {
+                    temp.DisplayPicture_url = pic.Url;
+                }
 
-
-
-                Fan User_following = await _context.Fan.FirstOrDefaultAsync(i => i.UserId == userId && i.IdFan== current_login_Userid);
+                    Fan User_following = await _context.Fan.FirstOrDefaultAsync(i => i.UserId == userId && i.IdFan== current_login_Userid);
                 if (User_following == null)
                    temp.Following=false;
                 else
@@ -164,11 +171,7 @@ namespace Checkar_webAPI_core.Data
                     temp.Fan = true;
 
                 }
-
-
-
-
-            }
+                }
 
         
             return temp;

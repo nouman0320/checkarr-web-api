@@ -9,6 +9,7 @@ namespace Checkar_webAPI_core.Dtos
     {
         public string UserFullname { get; set; }
         public string UserSex { get; set; }
+        public string DisplayPicture_url { get; set; }
         public   string  UserReg { get; set; }
         public string Disabled { get; set; }
         public int Total_fans { get; set; }
