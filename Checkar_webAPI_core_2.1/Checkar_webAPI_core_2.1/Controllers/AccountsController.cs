@@ -7,6 +7,7 @@ using Checkar_webAPI_core.Classes;
 using Checkar_webAPI_core.Data;
 using Checkar_webAPI_core.Dtos;
 using Checkar_webAPI_core.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -246,7 +247,7 @@ namespace Checkar_webAPI_core.Controllers
             });
         }
 
-
+        [Authorize]
         [HttpGet("{userID}/Profile_details")]
         public async Task<IActionResult> Profile_details(int userId)
         {

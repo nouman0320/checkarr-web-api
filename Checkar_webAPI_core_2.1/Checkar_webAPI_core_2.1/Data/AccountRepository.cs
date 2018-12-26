@@ -151,7 +151,7 @@ namespace Checkar_webAPI_core.Data
 
                 }
                 Fan User_following = await _context.Fan.FirstOrDefaultAsync(i => i.UserId == current_login_Userid && i.IdFan ==userId);
-                if (User_fan == null)
+                if (User_following == null)
                     temp.Following = false;
                 else
                 {
