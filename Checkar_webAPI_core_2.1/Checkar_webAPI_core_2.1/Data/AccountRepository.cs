@@ -140,22 +140,28 @@ namespace Checkar_webAPI_core.Data
                 temp.Disabled = User.Disabled;
                 temp.UserFullname = User.UserFullname;
                 temp.UserSex = User.UserSex;
-                temp.UserReg = User.UserReg;
+               
 
-               Fan User_fan = await _context.Fan.FirstOrDefaultAsync(i => i.UserId == userId && i.IdFan== current_login_Userid);
+                String temp_date = User.UserReg.ToString();
+                DateTime tempTime = Convert.ToDateTime(temp_date);
+                temp.UserReg = tempTime.ToString("MMMM").ToLower() + " " + tempTime.ToString("yyyy");
+
+
+
+                Fan User_following = await _context.Fan.FirstOrDefaultAsync(i => i.UserId == userId && i.IdFan== current_login_Userid);
+                if (User_following == null)
+                   temp.Following=false;
+                else
+                {
+                    temp.Following= true;
+
+                }
+                Fan User_fan = await _context.Fan.FirstOrDefaultAsync(i => i.UserId == current_login_Userid && i.IdFan ==userId);
                 if (User_fan == null)
-                   temp.Fan=false;
+                    temp.Fan = false;
                 else
                 {
                     temp.Fan = true;
-
-                }
-                Fan User_following = await _context.Fan.FirstOrDefaultAsync(i => i.UserId == current_login_Userid && i.IdFan ==userId);
-                if (User_following == null)
-                    temp.Following = false;
-                else
-                {
-                    temp.Following = true;
 
                 }
 
